@@ -1,0 +1,18 @@
+<% for attribute in attributes -%>
+<p>
+  <b><%= attribute.column.human_name %>:</b>
+  <%%=h @<%= singular_name %>.<%= attribute.name %> %>
+</p>
+<% end -%>
+
+<%% for <%= child_model_name.underscore %> in @<%= singular_name %>.<%= child_plural_name %> %>
+<% for attribute in child_attributes %>
+  <p>
+    <b><%= child_model_name %> <%= attribute.name.humanize %>:</b>
+    <%%=h <%= child_model_name.underscore %>.<%= attribute.name %> %>
+  </p>
+<% end %>
+<%% end %>
+
+<%%= link_to 'Edit', edit_<%= singular_name %>_path(@<%= singular_name %>) %> |
+<%%= link_to 'Back', <%= plural_name %>_path %>

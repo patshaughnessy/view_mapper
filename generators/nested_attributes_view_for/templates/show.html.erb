@@ -1,0 +1,18 @@
+<p>
+  <b>Name:</b>
+  <%=h @group.name %>
+</p>
+
+<% for person in @group.people %>
+  <p>
+    <b>Person Name:</b>
+    <%=h person.name %>
+  </p>
+  <p>
+    <b>Person Age:</b>
+    <%=h person.age %>
+  </p>
+<% end %>
+
+<%= link_to 'Edit', edit_group_path(@group) %> |
+<%= link_to 'Back', groups_path %>

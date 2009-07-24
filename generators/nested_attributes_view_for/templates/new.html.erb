@@ -1,0 +1,36 @@
+<h1>New group</h1>
+
+<% form_for(@group) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+
+  <p>
+    <% f.fields_for :people do |person_form| %>
+
+      <p>
+        Person <%= person_form.label :name %><br />
+        <%= person_form.text_field :name %>
+      </p>
+      <p>
+        Person <%= person_form.label :age %><br />
+        <%= person_form.text_field :age %>
+      </p>
+
+      <% unless person_form.object.new_record? %>
+        <%= person_form.check_box '_delete' %>
+        <%= person_form.label '_delete', 'Remove' %>
+      <% end %>
+
+    <% end %>
+  </p>
+
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', groups_path %>
