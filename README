@@ -1,6 +1,6 @@
 Generates view scaffolding code from an existing model or models.
 
-See: http://patshaughnessy.net for more details.
+See: http://patshaughnessy.net/view_mapper for more details.
 
 Usage 1: Create standard new, show, edit, and list views for an existing model. This will inspect
 the specified model and create attributes for each of the existing columns.
