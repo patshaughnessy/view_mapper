@@ -13,6 +13,6 @@ Usage 2: Create new, show, edit, and list views for two associated models in a m
 This will create a complex form allowing you to edit the parent and child models at the same time,
 using Rails 2.3 nested attributes.
 
-./script/generate nested_attributes_view_for [PARENT MODEL] containing:[CHILD MODEL]
+./script/generate nested_attributes_view_for [PARENT MODEL NAME] containing:[PLURAL CHILD MODEL NAME]
 
 Example: ./script/generate nested_attributes_view_for group containing:people
