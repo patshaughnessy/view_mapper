@@ -11,7 +11,7 @@
 <% end -%>
 
   <p>
-    <%% f.fields_for :people do |person_form| %>
+  <%% f.fields_for :<%= child_plural_name %> do |<%= child_form_name %>| %>
 <% for attribute in child_attributes -%>
       <p>
         <%= child_model_name.humanize %> <%%= <%= child_form_name %>.label :<%= attribute.name %> %><br />
