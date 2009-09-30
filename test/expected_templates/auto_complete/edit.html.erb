@@ -1,0 +1,23 @@
+<h1>Editing testy</h1>
+
+<% form_for(@testy) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :first_name %><br />
+    <%= f.text_field :first_name %>
+  </p>
+  <p>
+    <%= f.label :last_name %><br />
+    <%= f.text_field :last_name %>
+  </p>
+  <p>
+    <%= f.label :address %><br />
+    <%= text_field_with_auto_complete :testy, :address, {}, { :method => :get } %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @testy %> |
+<%= link_to 'Back', testies_path %>

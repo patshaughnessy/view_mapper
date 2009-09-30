@@ -1,0 +1,21 @@
+<h1>Editing <%= singular_name %></h1>
+
+<%% form_for(@<%= singular_name %>) do |f| %>
+  <%%= f.error_messages %>
+<% for attribute in attributes -%>
+  <p>
+    <%%= f.label :<%= attribute.name %> %><br />
+<%- if auto_complete_attribute == attribute.name -%>
+    <%%= text_field_with_auto_complete :<%= singular_name %>, :<%= attribute.name %>, {}, { :method => :get } %>
+<%- else -%>
+    <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+<%- end -%>
+  </p>
+<% end -%>
+  <p>
+    <%%= f.submit 'Update' %>
+  </p>
+<%% end %>
+
+<%%= link_to 'Show', @<%= singular_name %> %> |
+<%%= link_to 'Back', <%= plural_name %>_path %>

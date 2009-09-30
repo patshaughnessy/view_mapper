@@ -1,0 +1,1 @@
+script/generate view_for model [ --view view:view_parameter ]
