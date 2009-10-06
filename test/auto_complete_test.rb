@@ -12,23 +12,6 @@ class AutoCompleteViewTest < Test::Unit::TestCase
   attr_reader :file_name
   attr_reader :controller_singular_name
 
-  def generator_cmd_line(gen, args)
-    if gen == 'view_for'
-      cmd_line = ['testy']
-    else
-      cmd_line = ['testy', 'first_name:string', 'last_name:string', 'address:string']
-    end
-    (cmd_line << args).flatten
-  end
-
-  def generator_script_cmd_line(gen, args)
-    ([gen] << generator_cmd_line(gen, args)).flatten
-  end
-
-  def new_generator_for_test_model(gen, args)
-    Rails::Generator::Base.instance(gen, generator_cmd_line(gen, args))
-  end
-
   generators = %w{ view_for scaffold_for_view }
   generators.each do |gen|
 

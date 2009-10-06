@@ -1,0 +1,23 @@
+class CreateTesties < ActiveRecord::Migration
+  def self.up
+    create_table :testies do |t|
+      t.string   :first_name
+      t.string   :last_name
+      t.string   :address
+      t.string   :avatar_file_name
+      t.string   :avatar_content_type
+      t.integer  :avatar_file_size
+      t.datetime :avatar_updated_at
+      t.string   :avatar2_file_name
+      t.string   :avatar2_content_type
+      t.integer  :avatar2_file_size
+      t.datetime :avatar2_updated_at
+
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :testies
+  end
+end

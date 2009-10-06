@@ -1,0 +1,28 @@
+<p>
+  <b>First name:</b>
+  <%=h @testy.first_name %>
+</p>
+
+<p>
+  <b>Last name:</b>
+  <%=h @testy.last_name %>
+</p>
+
+<p>
+  <b>Address:</b>
+  <%=h @testy.address %>
+</p>
+
+<p>
+  <b>Avatar:</b>
+  <%= link_to @testy.avatar_file_name, @testy.avatar.url %><br>
+</p>
+
+<p>
+  <b>Avatar2:</b>
+  <%= link_to @testy.avatar2_file_name, @testy.avatar2.url %><br>
+</p>
+
+
+<%= link_to 'Edit', edit_testy_path(@testy) %> |
+<%= link_to 'Back', testies_path %>

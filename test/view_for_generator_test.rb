@@ -20,7 +20,7 @@ class ViewForGeneratorTest < Test::Unit::TestCase
     end
 
     should "display error message with a bad model name when run on view_for" do
-      Rails::Generator::Base.logger.expects('error').with('Class \'blah\' does not exist.')
+      Rails::Generator::Base.logger.expects('error').with('Class \'blah\' does not exist or contains a syntax error and could not be loaded.')
       @generator_script.run(['view_for', 'blah'])
     end
 
@@ -79,7 +79,7 @@ class ViewForGeneratorTest < Test::Unit::TestCase
     end
 
     should "have the proper model name" do
-      assert_equal @model, @view_for_gen.model
+      assert_equal @model.name, @view_for_gen.model.name
     end
 
     should "have the proper attributes for ERB" do

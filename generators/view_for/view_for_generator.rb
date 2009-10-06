@@ -30,7 +30,7 @@ class ViewForGenerator < ScaffoldGenerator
         @model = nil
       end
     rescue NameError
-      logger.error "Class '#{model_name}' does not exist."
+      logger.error "Class '#{model_name}' does not exist or contains a syntax error and could not be loaded."
     rescue ActiveRecord::StatementInvalid
       logger.error "Table for model '#{model_name}' does not exist - run rake db:migrate first."
     end
@@ -38,8 +38,12 @@ class ViewForGenerator < ScaffoldGenerator
 
   def custom_columns
     @model.columns.reject do |col|
-      BUILT_IN_COLUMNS.include? col.name
+      built_in_columns.include? col.name
     end
+  end
+
+  def built_in_columns
+    BUILT_IN_COLUMNS
   end
 
   def record

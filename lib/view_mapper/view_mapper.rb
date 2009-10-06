@@ -23,6 +23,10 @@ module ViewMapper
     options[:view].split(':')[1]
   end
 
+  def view_only?
+    self.respond_to?(:model)
+  end
+
   def add_options!(opt)
     opt.on("--view name", String, "Specify a view to generate") do |name|
       options[:view] = name

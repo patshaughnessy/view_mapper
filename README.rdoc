@@ -1,0 +1,44 @@
+=View Mapper
+
+View Mapper will generate scaffolding code and map it to your existing models.
+
+When you run the "view_for" generator, View Mapper will generate the view scaffolding code for your model, enhanced to use the specified plugin or feature with your model's attributes. For example:
+
+  script/generate view_for office --view auto_complete:address
+
+...will generate an "auto_complete view" for your existing office model. This is scaffolding that uses the attributes for your office model, and with code added to use the auto_complete plugin for the address field.
+
+  script/generate view_for song --view paperclip
+
+...will generate a "paperclip view" for your existing song model. This is scaffolding that will support viewing and editing your song model and its Paperclip attachments. It's a good way to learn how to use Paperclip if you aren't familiar with it yet.
+
+Currently View Mapper supports views for the auto_complete and paperclip plugins. If you don't specify any view then View Mapper by default will generate standard Rails scaffolding.
+
+If you also want to create a new model at the same time, then use a second View Mapper generator called "scaffold_for_view" and provide the model's attributes in the usual way:
+
+  script/generate scaffold_for_view office address:string code:string --view auto_complete:address
+
+== Installation:
+
+  gem sources -a http://gemcutter.org
+  sudo gem install view_mapper
+
+== Usage:
+
+  script/generate view_for model [ --view view_name[:param] ]
+
+This will generate scaffolding for an existing model. If you provide a view parameter, then View Mapper will enhance the scaffolding to use the specified plugin or feature with your model.
+
+  script/generate scaffold_for_view model attributes [ --view view_name[:param] ]
+
+This is the same as view_for, but will also generate a new model at the same time.
+
+== Views
+
+{auto_complete}[http://patshaughnessy.net/2009/10/1/auto_complete-scaffolding]: Generates scaffolding that uses the standard Rails auto_complete plugin for type ahead behavior.
+
+{paperclip}[http://patshaughnessy.net/2009/10/16/paperclip-scaffolding]: Generates scaffolding that uses Paperclip to upload and download files.
+
+== Examples
+
+For detailed examples and more information see: http://patshaughnessy.net/view_mapper

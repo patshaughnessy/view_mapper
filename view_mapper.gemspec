@@ -5,24 +5,22 @@
 
 Gem::Specification.new do |s|
   s.name = %q{view_mapper}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Shaughnessy"]
-  s.date = %q{2009-09-30}
+  s.date = %q{2009-10-16}
   s.description = %q{Generate complex view code for your models}
   s.email = %q{pat@patshaughnessy.net}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README",
-     "README.markdown"
+     "README.rdoc"
   ]
   s.files = [
     ".document",
      ".gitignore",
      "LICENSE",
-     "README",
-     "README.markdown",
+     "README.rdoc",
      "Rakefile",
      "VERSION",
      "generators/scaffold_for_view/USAGE",
@@ -42,6 +40,21 @@ Gem::Specification.new do |s|
      "lib/view_mapper/auto_complete_templates/view_show.html.erb",
      "lib/view_mapper/auto_complete_view.rb",
      "lib/view_mapper/editable_manifest.rb",
+     "lib/view_mapper/paperclip_templates/controller.rb",
+     "lib/view_mapper/paperclip_templates/fixtures.yml",
+     "lib/view_mapper/paperclip_templates/functional_test.rb",
+     "lib/view_mapper/paperclip_templates/helper.rb",
+     "lib/view_mapper/paperclip_templates/helper_test.rb",
+     "lib/view_mapper/paperclip_templates/layout.html.erb",
+     "lib/view_mapper/paperclip_templates/migration.rb",
+     "lib/view_mapper/paperclip_templates/model.rb",
+     "lib/view_mapper/paperclip_templates/style.css",
+     "lib/view_mapper/paperclip_templates/unit_test.rb",
+     "lib/view_mapper/paperclip_templates/view_edit.html.erb",
+     "lib/view_mapper/paperclip_templates/view_index.html.erb",
+     "lib/view_mapper/paperclip_templates/view_new.html.erb",
+     "lib/view_mapper/paperclip_templates/view_show.html.erb",
+     "lib/view_mapper/paperclip_view.rb",
      "lib/view_mapper/route_action.rb",
      "lib/view_mapper/view_mapper.rb",
      "test/auto_complete_test.rb",
@@ -55,12 +68,20 @@ Gem::Specification.new do |s|
      "test/expected_templates/auto_complete/standard_routes.rb",
      "test/expected_templates/auto_complete/testies.html.erb",
      "test/expected_templates/auto_complete/testies_controller.rb",
+     "test/expected_templates/paperclip/create_testies.rb",
+     "test/expected_templates/paperclip/edit.html.erb",
+     "test/expected_templates/paperclip/index.html.erb",
+     "test/expected_templates/paperclip/new.html.erb",
+     "test/expected_templates/paperclip/show.html.erb",
+     "test/expected_templates/paperclip/testy.rb",
      "test/fake/fake_generator.rb",
      "test/fake_view.rb",
+     "test/paperclip_view_test.rb",
      "test/rails_generator.rb",
      "test/rails_generator/base.rb",
      "test/rails_generator/commands.rb",
      "test/rails_generator/generated_attribute.rb",
+     "test/rails_generator/generators/components/model/model_generator.rb",
      "test/rails_generator/generators/components/scaffold/scaffold_generator.rb",
      "test/rails_generator/lookup.rb",
      "test/rails_generator/manifest.rb",
@@ -78,11 +99,10 @@ Gem::Specification.new do |s|
      "test/view_mapper_test.rb",
      "view_mapper.gemspec"
   ]
-  s.has_rdoc = true
   s.homepage = %q{http://github.com/patshaughnessy/view_mapper}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.1}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{Generate complex view code for your models}
   s.test_files = [
     "test/auto_complete_test.rb",
@@ -90,11 +110,15 @@ Gem::Specification.new do |s|
      "test/expected_templates/auto_complete/expected_routes.rb",
      "test/expected_templates/auto_complete/standard_routes.rb",
      "test/expected_templates/auto_complete/testies_controller.rb",
+     "test/expected_templates/paperclip/create_testies.rb",
+     "test/expected_templates/paperclip/testy.rb",
      "test/fake/fake_generator.rb",
      "test/fake_view.rb",
+     "test/paperclip_view_test.rb",
      "test/rails_generator/base.rb",
      "test/rails_generator/commands.rb",
      "test/rails_generator/generated_attribute.rb",
+     "test/rails_generator/generators/components/model/model_generator.rb",
      "test/rails_generator/generators/components/scaffold/scaffold_generator.rb",
      "test/rails_generator/lookup.rb",
      "test/rails_generator/manifest.rb",
@@ -115,7 +139,7 @@ Gem::Specification.new do |s|
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 2
+    s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
