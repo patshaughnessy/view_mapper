@@ -1,0 +1,18 @@
+<div class="child">
+  <p>
+    Testy <%= f.label :first_name %><br />
+    <%= f.text_field :first_name %>
+  </p>
+  <p>
+    Testy <%= f.label :last_name %><br />
+    <%= f.text_field :last_name %>
+  </p>
+  <p>
+    Testy <%= f.label :address %><br />
+    <%= f.text_field :address %>
+  </p>
+  <p>
+    <%= f.hidden_field :_delete, :class => 'delete' %>
+    <%= remove_child_link 'remove', f %>
+  </p>
+</div>

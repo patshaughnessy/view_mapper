@@ -44,8 +44,8 @@ def setup_test_table(paperclip_columns = false)
   end
 end
 
-def setup_test_model(missing_columns = false)
-  setup_test_table(missing_columns)
+def setup_test_model(paperclip_columns = false)
+  setup_test_table(paperclip_columns)
   Object.send(:remove_const, "Testy") rescue nil
   Object.const_set("Testy", Class.new(ActiveRecord::Base))
   Testy.class_eval do
@@ -55,6 +55,49 @@ def setup_test_model(missing_columns = false)
   end
   ActiveRecord::Base.send(:include, MockPaperclip)
   Object.const_get("Testy")
+end
+
+def setup_parent_test_model(create_foreign_key = true, child_belongs_to_parent = true)
+  ActiveRecord::Base.connection.create_table :parents, :force => true do |table|
+    table.column :name, :string
+  end
+  ActiveRecord::Base.connection.create_table :some_other_models, :force => true do |table|
+    table.column :name,      :string
+    table.column :parent_id, :integer
+  end
+  ActiveRecord::Base.connection.add_column :testies, :parent_id, :integer unless !create_foreign_key
+  Object.send(:remove_const, "Parent") rescue nil
+  Object.const_set("Parent", Class.new(ActiveRecord::Base))
+  Object.send(:remove_const, "SomeOtherModel") rescue nil
+  Object.const_set("SomeOtherModel", Class.new(ActiveRecord::Base))
+  Parent.class_eval do
+    has_many :testies
+    has_many :some_other_model
+    def testies_attributes=
+      'fake'
+    end
+    def some_other_models_attributes=
+      'fake'
+    end
+  end
+  Testy.class_eval do
+    belongs_to :parent unless !child_belongs_to_parent
+  end
+  SomeOtherModel.class_eval do
+    belongs_to :parent
+  end
+  Object.const_get("Parent")
+end
+
+def setup_test_model_without_nested_attributes
+  ActiveRecord::Base.connection.create_table :third_models, :force => true do |table|
+    table.column :name, :string
+  end
+  Object.send(:remove_const, "ThirdModel") rescue nil
+  Object.const_set("ThirdModel", Class.new(ActiveRecord::Base))
+  Parent.class_eval do
+    has_many :third_model
+  end
 end
 
 module MockPaperclip
@@ -73,19 +116,49 @@ class Rails::Generator::NamedBase
   public :attributes
 end
 
-def generator_cmd_line(gen, args)
+def generator_cmd_line(gen, args, model)
   if gen == 'view_for'
-    cmd_line = ['testy']
+    cmd_line = [model]
   else
-    cmd_line = ['testy', 'first_name:string', 'last_name:string', 'address:string']
+    cmd_line = [model, 'first_name:string', 'last_name:string', 'address:string']
   end
   (cmd_line << args).flatten
 end
 
-def generator_script_cmd_line(gen, args)
-  ([gen] << generator_cmd_line(gen, args)).flatten
+def generator_script_cmd_line(gen, args, model = 'testy')
+  ([gen] << generator_cmd_line(gen, args, model)).flatten
 end
 
-def new_generator_for_test_model(gen, args)
-  Rails::Generator::Base.instance(gen, generator_cmd_line(gen, args))
+def new_generator_for_test_model(gen, args, model = 'testy')
+  Rails::Generator::Base.instance(gen, generator_cmd_line(gen, args, model))
+end
+
+def expect_no_actions
+  Rails::Generator::Commands::Create.any_instance.expects(:directory).never
+  Rails::Generator::Commands::Create.any_instance.expects(:template).never
+  Rails::Generator::Commands::Create.any_instance.expects(:route_resources).never
+  Rails::Generator::Commands::Create.any_instance.expects(:file).never
+  Rails::Generator::Commands::Create.any_instance.expects(:route).never
+  Rails::Generator::Commands::Create.any_instance.expects(:dependency).never
+end
+
+def expect_no_warnings
+  Rails::Generator::Base.logger.expects(:error).never
+  Rails::Generator::Base.logger.expects(:warning).never
+  Rails::Generator::Base.logger.expects(:route).never
+end
+
+def stub_actions
+  Rails::Generator::Commands::Create.any_instance.stubs(:directory)
+  Rails::Generator::Commands::Create.any_instance.stubs(:template)
+  Rails::Generator::Commands::Create.any_instance.stubs(:route_resources)
+  Rails::Generator::Commands::Create.any_instance.stubs(:file)
+  Rails::Generator::Commands::Create.any_instance.stubs(:route)
+  Rails::Generator::Commands::Create.any_instance.stubs(:dependency)
+end
+
+def stub_warnings
+  Rails::Generator::Base.logger.stubs(:error)
+  Rails::Generator::Base.logger.stubs(:warning)
+  Rails::Generator::Base.logger.stubs(:route)
 end

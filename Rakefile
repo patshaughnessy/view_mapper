@@ -5,14 +5,16 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "view_mapper"
-    gem.summary = %Q{Generate complex view code for your models}
-    gem.description = %Q{Generate complex view code for your models}
+    gem.summary = %Q{Scaffolding for your models and plugins}
+    gem.description = %Q{View_mapper will generate scaffolding for new or existing models, customized for the plugins you use in your app.}
     gem.email = "pat@patshaughnessy.net"
-    gem.homepage = "http://github.com/patshaughnessy/view_mapper"
+    gem.homepage = "http://patshaughnessy.net/view_mapper"
     gem.authors = ["Pat Shaughnessy"]
     gem.add_development_dependency "thoughtbot-shoulda"
+    gem.add_development_dependency "mocha"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end

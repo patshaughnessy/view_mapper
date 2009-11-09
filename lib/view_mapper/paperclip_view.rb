@@ -38,7 +38,7 @@ module ViewMapper
       if view_param
         parse_attachments_from_param
       elsif view_only?
-        inspect_model_for_attachments
+        model.attachments
       else
         []
       end
@@ -46,14 +46,6 @@ module ViewMapper
 
     def parse_attachments_from_param
       view_param.split(',')
-    end
-
-    def inspect_model_for_attachments
-      if model.respond_to?('attachment_definitions') && model.attachment_definitions
-        model.attachment_definitions.keys.collect { |name| name.to_s }.sort
-      else
-        []
-      end
     end
 
     def validate
@@ -65,7 +57,7 @@ module ViewMapper
       if !paperclip_installed
         logger.error "The Paperclip plugin does not appear to be installed."
         return false
-      elsif attachments == []
+      elsif attachments.empty?
         if view_only?
           logger.warning "No paperclip attachments exist on the specified class."
         else
@@ -79,42 +71,15 @@ module ViewMapper
 
     def validate_attachment(attachment)
       if view_only?
-        if !has_attachment(attachment.to_sym)
+        if !model.has_attachment?(attachment)
           logger.error "Attachment '#{attachment}' does not exist."
           return false
-        elsif !has_columns_for_attachment(attachment)
+        elsif !model.has_columns_for_attachment?(attachment)
+          logger.error model.error
           return false
         end
       end
       true
-    end
-
-    def has_attachment(attachment)
-      model.attachment_definitions && model.attachment_definitions.has_key?(attachment)
-    end
-
-    def has_columns_for_attachment(attachment)
-      !paperclip_columns_for_attachment(attachment).detect { |paperclip_col| !has_column_for_attachment(attachment, paperclip_col) }
-    end
-
-    def has_column_for_attachment(attachment, paperclip_col)
-      has_column = model.columns.collect { |col| col.name }.include?(paperclip_col)
-      if !has_column
-        logger.error "Column \'#{paperclip_col}\' does not exist. First run script/generate paperclip #{name} #{attachment}."
-      end
-      has_column
-    end
-
-    def built_in_columns
-      attachments.inject(super) do |result, element|
-        result + paperclip_columns_for_attachment(element)
-      end
-    end
-
-    def paperclip_columns_for_attachment(attachment)
-      %w{ file_name content_type file_size updated_at }.collect do |col|
-        "#{attachment}_#{col}"
-      end
     end
 
     def paperclip_installed

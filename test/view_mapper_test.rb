@@ -4,7 +4,7 @@ class ViewMapperTest < Test::Unit::TestCase
 
   context "A rails generator script with a view option specified" do
     setup do
-      @gen = Rails::Generator::Base.instance('fake', ['testy', 'name:string', '--view', 'fake'])
+      @gen = new_generator_for_test_model('fake', ['testy', 'name:string', '--view', 'fake'])
     end
 
     should "use the specified view" do
@@ -18,7 +18,7 @@ class ViewMapperTest < Test::Unit::TestCase
 
   context "A rails generator script with a view option and parameter specified" do
     setup do
-      @gen = Rails::Generator::Base.instance('fake', ['testy', 'name:string', '--view', 'fake:value'])
+      @gen = new_generator_for_test_model('fake', ['testy', 'name:string', '--view', 'fake:value'])
     end
 
     should "pass the view parameter to the specified view" do

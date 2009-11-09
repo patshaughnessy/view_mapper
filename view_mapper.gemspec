@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{view_mapper}
-  s.version = "0.2.0"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Shaughnessy"]
-  s.date = %q{2009-10-16}
-  s.description = %q{Generate complex view code for your models}
+  s.date = %q{2009-11-09}
+  s.description = %q{View_mapper will generate scaffolding for new or existing models, customized for the plugins you use in your app.}
   s.email = %q{pat@patshaughnessy.net}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -40,6 +40,25 @@ Gem::Specification.new do |s|
      "lib/view_mapper/auto_complete_templates/view_show.html.erb",
      "lib/view_mapper/auto_complete_view.rb",
      "lib/view_mapper/editable_manifest.rb",
+     "lib/view_mapper/has_many_templates/controller.rb",
+     "lib/view_mapper/has_many_templates/fixtures.yml",
+     "lib/view_mapper/has_many_templates/functional_test.rb",
+     "lib/view_mapper/has_many_templates/helper.rb",
+     "lib/view_mapper/has_many_templates/helper_test.rb",
+     "lib/view_mapper/has_many_templates/layout.html.erb",
+     "lib/view_mapper/has_many_templates/migration.rb",
+     "lib/view_mapper/has_many_templates/model.rb",
+     "lib/view_mapper/has_many_templates/nested_attributes.js",
+     "lib/view_mapper/has_many_templates/style.css",
+     "lib/view_mapper/has_many_templates/unit_test.rb",
+     "lib/view_mapper/has_many_templates/view_child_form.html.erb",
+     "lib/view_mapper/has_many_templates/view_edit.html.erb",
+     "lib/view_mapper/has_many_templates/view_form.html.erb",
+     "lib/view_mapper/has_many_templates/view_index.html.erb",
+     "lib/view_mapper/has_many_templates/view_new.html.erb",
+     "lib/view_mapper/has_many_templates/view_show.html.erb",
+     "lib/view_mapper/has_many_view.rb",
+     "lib/view_mapper/model_info.rb",
      "lib/view_mapper/paperclip_templates/controller.rb",
      "lib/view_mapper/paperclip_templates/fixtures.yml",
      "lib/view_mapper/paperclip_templates/functional_test.rb",
@@ -68,6 +87,14 @@ Gem::Specification.new do |s|
      "test/expected_templates/auto_complete/standard_routes.rb",
      "test/expected_templates/auto_complete/testies.html.erb",
      "test/expected_templates/auto_complete/testies_controller.rb",
+     "test/expected_templates/has_many/_form.html.erb",
+     "test/expected_templates/has_many/_person.html.erb",
+     "test/expected_templates/has_many/create_parents.rb",
+     "test/expected_templates/has_many/edit.html.erb",
+     "test/expected_templates/has_many/index.html.erb",
+     "test/expected_templates/has_many/new.html.erb",
+     "test/expected_templates/has_many/parent.rb",
+     "test/expected_templates/has_many/show.html.erb",
      "test/expected_templates/paperclip/create_testies.rb",
      "test/expected_templates/paperclip/edit.html.erb",
      "test/expected_templates/paperclip/index.html.erb",
@@ -76,6 +103,8 @@ Gem::Specification.new do |s|
      "test/expected_templates/paperclip/testy.rb",
      "test/fake/fake_generator.rb",
      "test/fake_view.rb",
+     "test/has_many_view_test.rb",
+     "test/model_info_test.rb",
      "test/paperclip_view_test.rb",
      "test/rails_generator.rb",
      "test/rails_generator/base.rb",
@@ -99,21 +128,25 @@ Gem::Specification.new do |s|
      "test/view_mapper_test.rb",
      "view_mapper.gemspec"
   ]
-  s.homepage = %q{http://github.com/patshaughnessy/view_mapper}
+  s.homepage = %q{http://patshaughnessy.net/view_mapper}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{Generate complex view code for your models}
+  s.summary = %q{Scaffolding for your models and plugins}
   s.test_files = [
     "test/auto_complete_test.rb",
      "test/editable_manifest_test.rb",
      "test/expected_templates/auto_complete/expected_routes.rb",
      "test/expected_templates/auto_complete/standard_routes.rb",
      "test/expected_templates/auto_complete/testies_controller.rb",
+     "test/expected_templates/has_many/create_parents.rb",
+     "test/expected_templates/has_many/parent.rb",
      "test/expected_templates/paperclip/create_testies.rb",
      "test/expected_templates/paperclip/testy.rb",
      "test/fake/fake_generator.rb",
      "test/fake_view.rb",
+     "test/has_many_view_test.rb",
+     "test/model_info_test.rb",
      "test/paperclip_view_test.rb",
      "test/rails_generator/base.rb",
      "test/rails_generator/commands.rb",
@@ -143,10 +176,13 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_development_dependency(%q<mocha>, [">= 0"])
     else
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_dependency(%q<mocha>, [">= 0"])
     end
   else
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+    s.add_dependency(%q<mocha>, [">= 0"])
   end
 end

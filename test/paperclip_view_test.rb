@@ -33,21 +33,14 @@ class PaperclipViewTest < Test::Unit::TestCase
     end
   end
 
-  context "A view_for generator instantiated for a test model" do
+  context "A view_for generator instantiated for a test model missing Paperclip columns" do
     setup do
       setup_test_model(false)
     end
 
-    context "with missing paperclip columns" do
-      setup do
-        Struct.new("FakeColumn", :name)
-        @fake_cols = [ Struct::FakeColumn.new("first_name"), Struct::FakeColumn.new("last_name"), Struct::FakeColumn.new("address") ]
-      end
-
-      should "return an error message with a bad paperclip param" do
-        Rails::Generator::Base.logger.expects('error').with('Column \'avatar_file_name\' does not exist. First run script/generate paperclip testy avatar.')
-        new_generator_for_test_model('view_for', ['--view', 'paperclip:avatar'])
-      end
+    should "return an error message with a bad paperclip param" do
+      Rails::Generator::Base.logger.expects('error').with('Column \'avatar_file_name\' does not exist. First run script/generate paperclip testy avatar.')
+      new_generator_for_test_model('view_for', ['--view', 'paperclip:avatar'])
     end
   end
 
@@ -138,22 +131,6 @@ class PaperclipViewTest < Test::Unit::TestCase
 
     should "return the proper source root folder" do
       assert_equal './test/../lib/view_mapper/paperclip_templates', @gen.source_root
-    end
-
-    should "have the proper built in columns" do
-      assert_equal [ 'id',
-                     'created_at',
-                     'updated_at',
-                     'avatar_file_name',
-                     'avatar_content_type',
-                     'avatar_file_size',
-                     'avatar_updated_at',
-                     'avatar2_file_name',
-                     'avatar2_content_type',
-                     'avatar2_file_size',
-                     'avatar2_updated_at'
-                   ].sort,
-                   @gen.built_in_columns.sort
     end
 
     view_for_templates = %w{ new edit index show }

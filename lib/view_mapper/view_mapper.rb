@@ -6,12 +6,12 @@ module ViewMapper
     Rails::Generator::Commands::Destroy.class_eval { include RouteAction::Destroy }
     super
     if options[:view]
-      self.extend(view_class)
+      self.extend(view_module)
       @source_root = source_root_for_view
     end
   end
 
-  def view_class
+  def view_module
     "ViewMapper::#{view_name.camelize}View".constantize
   end
 
