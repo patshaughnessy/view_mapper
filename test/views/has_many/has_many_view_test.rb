@@ -118,7 +118,7 @@ class HasManyViewTest < Test::Unit::TestCase
     end
 
     should "return the proper source root folder" do
-      assert_equal './test/../lib/view_mapper/has_many_templates', @gen.source_root
+      assert_equal './test/../lib/view_mapper/views/has_many/templates', @gen.source_root
     end
 
     view_for_templates = %w{ new edit show index }
@@ -128,9 +128,9 @@ class HasManyViewTest < Test::Unit::TestCase
         @singular_name = @gen.singular_name
         @plural_name = @gen.plural_name
         @child_models = @gen.child_models
-        template_file = File.open(File.join(File.dirname(__FILE__), "/../lib/view_mapper/has_many_templates/view_#{template}.html.erb"))
+        template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/has_many/templates/view_#{template}.html.erb"))
         result = ERB.new(template_file.read, nil, '-').result(binding)
-        expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/has_many/#{template}.html.erb"))
+        expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/#{template}.html.erb"))
         assert_equal expected_file.read, result
       end
     end
@@ -140,17 +140,17 @@ class HasManyViewTest < Test::Unit::TestCase
       @singular_name = @gen.singular_name
       @plural_name = @gen.plural_name
       @child_models = @gen.child_models
-      template_file = File.open(File.join(File.dirname(__FILE__), "/../lib/view_mapper/has_many_templates/view_form.html.erb"))
+      template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/has_many/templates/view_form.html.erb"))
       result = ERB.new(template_file.read, nil, '-').result(binding)
-      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/has_many/_form.html.erb"))
+      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/_form.html.erb"))
       assert_equal expected_file.read, result
     end
 
     should "render the person partial as expected" do
       @child_model = @gen.child_models[1]
-      template_file = File.open(File.join(File.dirname(__FILE__), "/../lib/view_mapper/has_many_templates/view_child_form.html.erb"))
+      template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/has_many/templates/view_child_form.html.erb"))
       result = ERB.new(template_file.read, nil, '-').result(binding)
-      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/has_many/_person.html.erb"))
+      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/_person.html.erb"))
       assert_equal expected_file.read, result
     end
   end
@@ -166,9 +166,9 @@ class HasManyViewTest < Test::Unit::TestCase
       @child_models = @gen.child_models
       @class_name = @gen.class_name
       @attributes = @gen.attributes
-      template_file = File.open(File.join(File.dirname(__FILE__), "/../lib/view_mapper/has_many_templates/model.rb"))
+      template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/has_many/templates/model.rb"))
       result = ERB.new(template_file.read, nil, '-').result(binding)
-      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/has_many/parent.rb"))
+      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/parent.rb"))
       assert_equal expected_file.read, result
     end
 
@@ -178,9 +178,9 @@ class HasManyViewTest < Test::Unit::TestCase
       @migration_name = 'CreateParents'
       @table_name = @gen.table_name
       @options = {}
-      template_file = File.open(File.join(File.dirname(__FILE__), "/../lib/view_mapper/has_many_templates/migration.rb"))
+      template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/has_many/templates/migration.rb"))
       result = ERB.new(template_file.read, nil, '-').result(binding)
-      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/has_many/create_parents.rb"))
+      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/create_parents.rb"))
       assert_equal expected_file.read, result
     end
   end

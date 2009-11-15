@@ -4,7 +4,7 @@ module ViewMapper
     attr_reader :child_models
 
     def source_root_for_view
-      File.dirname(__FILE__) + "/has_many_templates"
+      File.dirname(__FILE__) + "/templates"
     end
 
     def manifest
