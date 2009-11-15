@@ -2,7 +2,7 @@ module ViewMapper
   module AutoCompleteView
 
     def source_root_for_view
-      File.dirname(__FILE__) + "/auto_complete_templates"
+      File.dirname(__FILE__) + "/templates"
     end
 
     def manifest
