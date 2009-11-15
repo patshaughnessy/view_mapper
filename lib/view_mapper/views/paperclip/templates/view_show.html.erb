@@ -1,0 +1,17 @@
+<% for attribute in attributes -%>
+<p>
+  <b><%= attribute.column.human_name %>:</b>
+  <%%=h @<%= singular_name %>.<%= attribute.name %> %>
+</p>
+
+<% end -%>
+<% for attachment in attachments -%>
+<p>
+  <b><%= attachment.capitalize %>:</b>
+  <%%= link_to @<%= singular_name %>.<%= attachment%>_file_name, @<%= singular_name %>.<%= attachment%>.url %><br>
+</p>
+
+<% end -%>
+
+<%%= link_to 'Edit', edit_<%= singular_name %>_path(@<%= singular_name %>) %> |
+<%%= link_to 'Back', <%= plural_name %>_path %>

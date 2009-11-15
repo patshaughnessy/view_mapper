@@ -1,0 +1,22 @@
+<% for attribute in attributes -%>
+<p>
+  <b><%= attribute.column.human_name %>:</b>
+  <%%=h @<%= singular_name %>.<%= attribute.name %> %>
+</p>
+
+<% end -%>
+<% child_models.each do |child_model| -%>
+<%% @<%= singular_name %>.<%= child_model.name.underscore.pluralize %>.each do |<%= child_model.name.underscore %>| %>
+  <div class="child">
+<% for attribute in child_model.attributes -%>
+    <p>
+      <b><%= child_model.name %> <%= attribute.column.human_name %>:</b>
+      <%%=h <%= child_model.name.underscore%>.<%= attribute.name %> %>
+    </p>
+<% end -%>
+  </div>
+<%% end %>
+
+<% end -%>
+<%%= link_to 'Edit', edit_<%= singular_name %>_path(@<%= singular_name %>) %> |
+<%%= link_to 'Back', <%= plural_name %>_path %>
