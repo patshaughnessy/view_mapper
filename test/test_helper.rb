@@ -24,7 +24,7 @@ add_source(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'view_mapper'
-require 'fake_view'
+require 'views/fake/fake_view'
 
 def setup_test_table(paperclip_columns = false)
   ActiveRecord::Base.connection.create_table :testies, :force => true do |table|
