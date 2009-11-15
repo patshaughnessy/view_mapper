@@ -19,7 +19,7 @@ end
 
 add_source(File.dirname(__FILE__) + '/../generators')
 add_source(File.dirname(__FILE__) + '/rails_generator/generators/components')
-add_source(File.dirname(__FILE__))
+add_source(File.dirname(__FILE__) + '/generators')
 
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 $LOAD_PATH.unshift(File.dirname(__FILE__))
