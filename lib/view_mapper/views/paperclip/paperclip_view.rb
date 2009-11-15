@@ -2,7 +2,7 @@ module ViewMapper
   module PaperclipView
 
     def source_root_for_view
-      File.dirname(__FILE__) + "/paperclip_templates"
+      File.dirname(__FILE__) + "/templates"
     end
 
     def manifest

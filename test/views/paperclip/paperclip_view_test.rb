@@ -130,7 +130,7 @@ class PaperclipViewTest < Test::Unit::TestCase
     end
 
     should "return the proper source root folder" do
-      assert_equal './test/../lib/view_mapper/paperclip_templates', @gen.source_root
+      assert_equal './test/../lib/view_mapper/views/paperclip/templates', @gen.source_root
     end
 
     view_for_templates = %w{ new edit index show }
@@ -140,9 +140,9 @@ class PaperclipViewTest < Test::Unit::TestCase
         @singular_name = @gen.singular_name
         @plural_name = @gen.plural_name
         @attachments = @gen.attachments
-        template_file = File.open(File.join(File.dirname(__FILE__), "/../lib/view_mapper/paperclip_templates/view_#{template}.html.erb"))
+        template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/paperclip/templates/view_#{template}.html.erb"))
         result = ERB.new(template_file.read, nil, '-').result(binding)
-        expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/paperclip/#{template}.html.erb"))
+        expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/#{template}.html.erb"))
         assert_equal expected_file.read, result
       end
     end
@@ -254,9 +254,9 @@ class PaperclipViewTest < Test::Unit::TestCase
       @class_name = @gen.class_name
       @attributes = @gen.attributes
       @attachments = @gen.attachments
-      template_file = File.open(File.join(File.dirname(__FILE__), "/../lib/view_mapper/paperclip_templates/model.rb"))
+      template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/paperclip/templates/model.rb"))
       result = ERB.new(template_file.read, nil, '-').result(binding)
-      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/paperclip/testy.rb"))
+      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/testy.rb"))
       assert_equal expected_file.read, result
     end
 
@@ -267,9 +267,9 @@ class PaperclipViewTest < Test::Unit::TestCase
       @migration_name = 'CreateTesties'
       @table_name = @gen.table_name
       @options = {}
-      template_file = File.open(File.join(File.dirname(__FILE__), "/../lib/view_mapper/paperclip_templates/migration.rb"))
+      template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/paperclip/templates/migration.rb"))
       result = ERB.new(template_file.read, nil, '-').result(binding)
-      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/paperclip/create_testies.rb"))
+      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/create_testies.rb"))
       assert_equal expected_file.read, result
     end
   end
