@@ -1,53 +1,69 @@
-require 'test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
 class AutoCompleteViewTest < Test::Unit::TestCase
 
   attr_reader :singular_name
   attr_reader :plural_name
   attr_reader :attributes
-  attr_reader :auto_complete_attribute
+  attr_reader :auto_complete_attributes
   attr_reader :controller_class_name
   attr_reader :table_name
   attr_reader :class_name
   attr_reader :file_name
   attr_reader :controller_singular_name
 
+  context "A view_for generator instantiated for a test model" do
+    setup do
+      setup_test_model
+    end
+
+    should "detect all of the text fields when no auto_complete field is specified" do
+      gen = new_generator_for_test_model('view_for', ['--view', 'auto_complete'])
+      assert_contains         gen.auto_complete_attributes, 'first_name'
+      assert_contains         gen.auto_complete_attributes, 'last_name'
+      assert_contains         gen.auto_complete_attributes, 'address'
+      assert_does_not_contain gen.auto_complete_attributes, 'some_flag'
+    end
+  end
+
+  context "A scaffold_for_view generator instantiated for a test model" do
+    setup do
+      setup_test_model
+    end
+
+    should "return an error message without an auto_complete param" do
+      Rails::Generator::Base.logger.expects('error').with('No auto_complete attribute specified.')
+      new_generator_for_test_model('scaffold_for_view', ['--view', 'auto_complete'])
+    end
+  end
+
   generators = %w{ view_for scaffold_for_view }
   generators.each do |gen|
 
     context "A #{gen} generator instantiated for a test model" do
-      should "return an error message without an auto_complete param" do
-        Rails::Generator::Base.logger.expects('error').with('No auto_complete attribute specified.')
-        new_generator_for_test_model(gen, ['--view', 'auto_complete'])
+      setup do
+        setup_test_model
       end
 
       should "return an error message with a bad auto_complete param" do
         Rails::Generator::Base.logger.expects('error').with('Field \'blah\' does not exist.')
         new_generator_for_test_model(gen, ['--view', 'auto_complete:blah'])
       end
-    end
 
-    context "A #{gen} generator instantiated for a test model with auto_complete on the first_name field" do
-      setup do
-        @gen = new_generator_for_test_model(gen, ['--view', 'auto_complete:first_name'])
-      end
-
-      should "find the auto complete column name" do
-        assert_equal 'first_name', @gen.auto_complete_attribute
-      end
-
-      should "have the correct auto_complete_for method name" do
-        assert_equal 'auto_complete_for_testy_first_name', @gen.auto_complete_for_method
+      should "return an error message when the auto_complete param matches a field that is not a text field" do
+        Rails::Generator::Base.logger.expects('error').with('Field \'some_flag\' is not a text field.')
+        new_generator_for_test_model(gen, ['--view', 'auto_complete:some_flag'])
       end
     end
 
-    context "A #{gen} generator instantiated for a test model with auto_complete on the address field" do
+    context "A #{gen} generator instantiated for a test model with auto_complete on the first and last name fields" do
       setup do
-        @gen = new_generator_for_test_model(gen, ['--view', 'auto_complete:address'])
+        setup_test_model
+        @gen = new_generator_for_test_model(gen, ['--view', 'auto_complete:first_name,last_name'])
       end
 
       should "return the proper source root folder" do
-        assert_equal './test/../lib/view_mapper/views/auto_complete/templates', @gen.source_root
+        assert_equal File.expand_path(File.dirname(__FILE__) + '/../../..//lib/view_mapper/views/auto_complete/templates'), @gen.source_root
       end
 
       view_for_templates = %w{ new edit index show }
@@ -56,7 +72,7 @@ class AutoCompleteViewTest < Test::Unit::TestCase
           @attributes = @gen.attributes
           @singular_name = @gen.singular_name
           @plural_name = @gen.plural_name
-          @auto_complete_attribute = @gen.auto_complete_attribute
+          @auto_complete_attributes = @gen.auto_complete_attributes
           template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/auto_complete/templates/view_#{template}.html.erb"))
           result = ERB.new(template_file.read, nil, '-').result(binding)
           expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/#{template}.html.erb"))
@@ -78,7 +94,7 @@ class AutoCompleteViewTest < Test::Unit::TestCase
         @class_name = @gen.class_name
         @file_name = @gen.file_name
         @controller_singular_name = @gen.controller_singular_name
-        @auto_complete_attribute = @gen.auto_complete_attribute
+        @auto_complete_attributes = @gen.auto_complete_attributes
         template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/auto_complete/templates/controller.rb"))
         result = ERB.new(template_file.read, nil, '-').result(binding)
         expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/testies_controller.rb"))
@@ -112,8 +128,15 @@ class AutoCompleteViewTest < Test::Unit::TestCase
         assert_equal File.open(expected_routes_file).read, File.open(test_routes_file).read
         File.delete(test_routes_file)
       end
+    end
 
-      should "not perform any actions when run on the #{gen} generator with no auto_complete field" do
+    context "A Rails generator script" do
+      setup do
+        setup_test_model
+        @generator_script = Rails::Generator::Scripts::Generate.new
+      end
+
+      should "not perform any actions when run on the scaffold_for_view generator with no auto_complete field" do
         Rails::Generator::Commands::Create.any_instance.expects(:directory).never
         Rails::Generator::Commands::Create.any_instance.expects(:template).never
         Rails::Generator::Commands::Create.any_instance.expects(:route_resources).never
@@ -121,7 +144,7 @@ class AutoCompleteViewTest < Test::Unit::TestCase
         Rails::Generator::Commands::Create.any_instance.expects(:route).never
         Rails::Generator::Base.logger.stubs(:error)
         Rails::Generator::Base.logger.stubs(:route)
-        @generator_script.run(generator_script_cmd_line(gen, ['--view', 'auto_complete']))
+        @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'auto_complete']))
       end
     end
   end

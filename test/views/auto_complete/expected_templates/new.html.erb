@@ -4,15 +4,19 @@
   <%= f.error_messages %>
   <p>
     <%= f.label :first_name %><br />
-    <%= f.text_field :first_name %>
+    <%= text_field_with_auto_complete :testy, :first_name, {}, { :method => :get } %>
   </p>
   <p>
     <%= f.label :last_name %><br />
-    <%= f.text_field :last_name %>
+    <%= text_field_with_auto_complete :testy, :last_name, {}, { :method => :get } %>
   </p>
   <p>
     <%= f.label :address %><br />
-    <%= text_field_with_auto_complete :testy, :address, {}, { :method => :get } %>
+    <%= f.text_field :address %>
+  </p>
+  <p>
+    <%= f.label :some_flag %><br />
+    <%= f.check_box :some_flag %>
   </p>
   <p>
     <%= f.submit 'Create' %>

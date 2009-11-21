@@ -23,6 +23,14 @@ module ViewMapper
       @attributes ||= active_record_columns.collect { |col| Rails::Generator::GeneratedAttribute.new col.name, col.type }
     end
 
+    def self.is_text_field_attrib_type?(type)
+      [:integer, :float, :decimal, :string].include? type
+    end
+
+    def text_fields
+      attributes.reject { |attrib| !ModelInfo.is_text_field_attrib_type? attrib.type }.collect { |attrib| attrib.name }
+    end
+
     def attachments
       @attachments = find_attachments
     end

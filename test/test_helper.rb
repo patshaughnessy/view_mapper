@@ -31,6 +31,7 @@ def setup_test_table(paperclip_columns = false)
     table.column :first_name, :string
     table.column :last_name,  :string
     table.column :address,    :string
+    table.column :some_flag,  :boolean
     if paperclip_columns
       table.column :avatar_file_name,     :string
       table.column :avatar_content_type,  :string
@@ -116,11 +117,18 @@ class Rails::Generator::NamedBase
   public :attributes
 end
 
+module ActionController
+  class Base
+    def self.auto_complete_for
+    end
+  end
+end
+
 def generator_cmd_line(gen, args, model)
   if gen == 'view_for'
     cmd_line = [model]
   else
-    cmd_line = [model, 'first_name:string', 'last_name:string', 'address:string']
+    cmd_line = [model, 'first_name:string', 'last_name:string', 'address:string', 'some_flag:boolean']
   end
   (cmd_line << args).flatten
 end

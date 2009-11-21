@@ -17,17 +17,26 @@ class ModelInfoTest < Test::Unit::TestCase
     end
 
     should "return the model's columns and not the primary key or time stamp columns" do
-      assert_equal [ 'first_name', 'last_name', 'address' ], @model_info.columns
+      assert_equal [ 'first_name', 'last_name', 'address', 'some_flag' ], @model_info.columns
     end
 
     should "return the model's Rails Generator attributes" do
       attribs = @model_info.attributes
+      assert_equal 4, attribs.size
       assert_kind_of Rails::Generator::GeneratedAttribute, attribs[0]
       assert_kind_of Rails::Generator::GeneratedAttribute, attribs[1]
       assert_kind_of Rails::Generator::GeneratedAttribute, attribs[2]
       assert_equal 'first_name', attribs[0].name
       assert_equal 'last_name',  attribs[1].name
       assert_equal 'address',    attribs[2].name
+    end
+
+    should "return the model's text fields" do
+      text_fields = @model_info.text_fields
+      assert_equal 3, text_fields.size
+      assert_equal 'first_name', text_fields[0]
+      assert_equal 'last_name',  text_fields[1]
+      assert_equal 'address',    text_fields[2]
     end
   end
 
@@ -40,7 +49,7 @@ class ModelInfoTest < Test::Unit::TestCase
     end
 
     should "not include the parent foreign key column in the child model's columns" do
-      assert_equal [ 'first_name', 'last_name', 'address' ], @child_model.columns
+      assert_equal [ 'first_name', 'last_name', 'address', 'some_flag' ], @child_model.columns
     end
 
     should "determine that the child model belongs to the parent model" do
@@ -75,7 +84,7 @@ class ModelInfoTest < Test::Unit::TestCase
     end
 
     should "not include the Paperclip columns in the model's columns" do
-      assert_equal [ 'first_name', 'last_name', 'address' ], @model_info.columns
+      assert_equal [ 'first_name', 'last_name', 'address', 'some_flag' ], @model_info.columns
     end
   end
 end

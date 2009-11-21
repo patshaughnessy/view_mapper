@@ -5,7 +5,7 @@
 <%- for attribute in attributes -%>
   <p>
     <%%= f.label :<%= attribute.name %> %><br />
-<%- if auto_complete_attribute == attribute.name -%>
+<%- if auto_complete_attributes.include? attribute.name -%>
     <%%= text_field_with_auto_complete :<%= singular_name %>, :<%= attribute.name %>, {}, { :method => :get } %>
 <%- else -%>
     <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>

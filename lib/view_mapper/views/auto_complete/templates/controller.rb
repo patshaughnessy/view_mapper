@@ -1,6 +1,8 @@
 class <%= controller_class_name %>Controller < ApplicationController
 
-  auto_complete_for :<%= controller_singular_name %>, :<%= auto_complete_attribute %>
+<% auto_complete_attributes.each do |attrib| -%>
+  auto_complete_for :<%= controller_singular_name %>, :<%= attrib %>
+<% end -%>
 
   # GET /<%= table_name %>
   # GET /<%= table_name %>.xml

@@ -1,6 +1,7 @@
 class TestiesController < ApplicationController
 
-  auto_complete_for :testy, :address
+  auto_complete_for :testy, :first_name
+  auto_complete_for :testy, :last_name
 
   # GET /testies
   # GET /testies.xml
