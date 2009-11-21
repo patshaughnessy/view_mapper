@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
 class HasManyViewTest < Test::Unit::TestCase
 
@@ -26,8 +26,8 @@ class HasManyViewTest < Test::Unit::TestCase
       assert_equal 2, child_models.size
       assert_equal 'SomeOtherModel', child_models[0].name
       assert_equal 'Testy',          child_models[1].name
-      assert_equal [ 'name' ],                               child_models[0].columns
-      assert_equal [ 'first_name', 'last_name', 'address' ], child_models[1].columns
+      assert_equal [ 'name' ],       child_models[0].columns
+      assert_equal [ 'first_name', 'last_name', 'address', 'some_flag' ], child_models[1].columns
     end
 
     should "use find the specified valid child model if provided" do
@@ -43,8 +43,8 @@ class HasManyViewTest < Test::Unit::TestCase
       assert_equal 2, gen.child_models.size
       assert_equal 'Testy',          child_models[0].name
       assert_equal 'SomeOtherModel', child_models[1].name
-      assert_equal [ 'first_name', 'last_name', 'address' ], child_models[0].columns
-      assert_equal [ 'name' ],                               child_models[1].columns
+      assert_equal [ 'name' ],       child_models[1].columns
+      assert_equal [ 'first_name', 'last_name', 'address', 'some_flag' ], child_models[0].columns
     end
 
     should "return an error message with a bad child model param" do
@@ -118,7 +118,7 @@ class HasManyViewTest < Test::Unit::TestCase
     end
 
     should "return the proper source root folder" do
-      assert_equal './test/../lib/view_mapper/views/has_many/templates', @gen.source_root
+      assert_equal File.expand_path(File.dirname(__FILE__) + '/../../../lib/view_mapper/views/has_many/templates'), @gen.source_root
     end
 
     view_for_templates = %w{ new edit show index }

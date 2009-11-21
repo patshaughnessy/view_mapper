@@ -12,6 +12,10 @@
     <%= f.text_field :address %>
   </p>
   <p>
+    Testy <%= f.label :some_flag %><br />
+    <%= f.check_box :some_flag %>
+  </p>
+  <p>
     <%= f.hidden_field :_delete, :class => 'delete' %>
     <%= remove_child_link 'remove', f %>
   </p>

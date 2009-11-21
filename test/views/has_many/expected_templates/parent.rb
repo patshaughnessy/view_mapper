@@ -9,6 +9,7 @@ class Parent < ActiveRecord::Base
                                 :reject_if => proc { |attrs|
                                   attrs['first_name'].blank? &&
                                   attrs['last_name'].blank? &&
-                                  attrs['address'].blank?
+                                  attrs['address'].blank? &&
+                                  attrs['some_flag'].blank?
                                 }
 end
