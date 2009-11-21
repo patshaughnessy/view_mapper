@@ -129,23 +129,23 @@ class AutoCompleteViewTest < Test::Unit::TestCase
         File.delete(test_routes_file)
       end
     end
+  end
 
-    context "A Rails generator script" do
-      setup do
-        setup_test_model
-        @generator_script = Rails::Generator::Scripts::Generate.new
-      end
+  context "A Rails generator script" do
+    setup do
+      setup_test_model
+      @generator_script = Rails::Generator::Scripts::Generate.new
+    end
 
-      should "not perform any actions when run on the scaffold_for_view generator with no auto_complete field" do
-        Rails::Generator::Commands::Create.any_instance.expects(:directory).never
-        Rails::Generator::Commands::Create.any_instance.expects(:template).never
-        Rails::Generator::Commands::Create.any_instance.expects(:route_resources).never
-        Rails::Generator::Commands::Create.any_instance.expects(:file).never
-        Rails::Generator::Commands::Create.any_instance.expects(:route).never
-        Rails::Generator::Base.logger.stubs(:error)
-        Rails::Generator::Base.logger.stubs(:route)
-        @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'auto_complete']))
-      end
+    should "not perform any actions when run on the scaffold_for_view generator with no auto_complete field" do
+      Rails::Generator::Commands::Create.any_instance.expects(:directory).never
+      Rails::Generator::Commands::Create.any_instance.expects(:template).never
+      Rails::Generator::Commands::Create.any_instance.expects(:route_resources).never
+      Rails::Generator::Commands::Create.any_instance.expects(:file).never
+      Rails::Generator::Commands::Create.any_instance.expects(:route).never
+      Rails::Generator::Base.logger.stubs(:error)
+      Rails::Generator::Base.logger.stubs(:route)
+      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'auto_complete']))
     end
   end
 
