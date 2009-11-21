@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
 class PaperclipViewTest < Test::Unit::TestCase
 
@@ -130,7 +130,7 @@ class PaperclipViewTest < Test::Unit::TestCase
     end
 
     should "return the proper source root folder" do
-      assert_equal './test/../lib/view_mapper/views/paperclip/templates', @gen.source_root
+      assert_equal File.expand_path(File.dirname(__FILE__) + '/../../../lib/view_mapper/views/paperclip/templates'), @gen.source_root
     end
 
     view_for_templates = %w{ new edit index show }

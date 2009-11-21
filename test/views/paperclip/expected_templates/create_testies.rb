@@ -1,9 +1,10 @@
 class CreateTesties < ActiveRecord::Migration
   def self.up
     create_table :testies do |t|
-      t.string   :first_name
-      t.string   :last_name
-      t.string   :address
+      t.string :first_name
+      t.string :last_name
+      t.string :address
+      t.boolean :some_flag
       t.string   :avatar_file_name
       t.string   :avatar_content_type
       t.integer  :avatar_file_size

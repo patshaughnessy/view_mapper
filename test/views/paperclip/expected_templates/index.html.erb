@@ -5,6 +5,7 @@
     <th>First name</th>
     <th>Last name</th>
     <th>Address</th>
+    <th>Some flag</th>
   </tr>
 
 <% @testies.each do |testy| %>
@@ -12,6 +13,7 @@
     <td><%=h testy.first_name %></td>
     <td><%=h testy.last_name %></td>
     <td><%=h testy.address %></td>
+    <td><%=h testy.some_flag %></td>
     <td><%= link_to 'Show', testy %></td>
     <td><%= link_to 'Edit', edit_testy_path(testy) %></td>
     <td><%= link_to 'Destroy', testy, :confirm => 'Are you sure?', :method => :delete %></td>
