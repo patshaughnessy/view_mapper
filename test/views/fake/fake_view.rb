@@ -1,7 +1,7 @@
 module ViewMapper
   module FakeView
-    def source_root_for_view
-      '/some/path/templates'
+    def self.source_root
+      File.expand_path(File.dirname(__FILE__) + '/templates')
     end
   end
 end

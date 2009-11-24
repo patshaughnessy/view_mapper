@@ -5,10 +5,20 @@ module ViewMapper
     Rails::Generator::Commands::Create.class_eval { include RouteAction::Create }
     Rails::Generator::Commands::Destroy.class_eval { include RouteAction::Destroy }
     super
-    if options[:view]
-      self.extend(view_module)
-      @source_root = source_root_for_view
+    self.extend(view_module) if options[:view]
+  end
+
+  def source_path(relative_source)
+    source_roots_for_view.map do |source_root|
+      File.join(File.expand_path(source_root), relative_source)
+    end.detect do |path|
+      puts "Exists? #{path}"
+      File.exists? path
     end
+  end
+
+  def source_roots_for_view
+    [ view_module.source_root, File.expand_path(source_root) ]
   end
 
   def view_module

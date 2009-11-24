@@ -1,7 +1,7 @@
 module ViewMapper
   module AutoCompleteView
 
-    def source_root_for_view
+    def self.source_root
       File.expand_path(File.dirname(__FILE__) + "/templates")
     end
 

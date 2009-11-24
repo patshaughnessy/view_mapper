@@ -62,8 +62,8 @@ class AutoCompleteViewTest < Test::Unit::TestCase
         @gen = new_generator_for_test_model(gen, ['--view', 'auto_complete:first_name,last_name'])
       end
 
-      should "return the proper source root folder" do
-        assert_equal File.expand_path(File.dirname(__FILE__) + '/../../..//lib/view_mapper/views/auto_complete/templates'), @gen.source_root
+      should "return the proper source root" do
+        assert_equal File.expand_path(File.dirname(__FILE__) + '/../../..//lib/view_mapper/views/auto_complete/templates'), ViewMapper::AutoCompleteView.source_root
       end
 
       view_for_templates = %w{ new edit index show }
@@ -73,16 +73,16 @@ class AutoCompleteViewTest < Test::Unit::TestCase
           @singular_name = @gen.singular_name
           @plural_name = @gen.plural_name
           @auto_complete_attributes = @gen.auto_complete_attributes
-          template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/auto_complete/templates/view_#{template}.html.erb"))
+          template_file = File.open(@gen.source_path("view_#{template}.html.erb"))
           result = ERB.new(template_file.read, nil, '-').result(binding)
-          expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/#{template}.html.erb"))
+          expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/#{template}.html.erb"), 'rb')
           assert_equal expected_file.read, result
         end
       end
 
       should "render the layout template as expected" do
         @controller_class_name = @gen.controller_class_name
-        template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/auto_complete/templates/layout.html.erb"))
+        template_file = File.open(@gen.source_path("layout.html.erb"))
         result = ERB.new(template_file.read, nil, '-').result(binding)
         expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/testies.html.erb"))
         assert_equal expected_file.read, result
@@ -95,7 +95,7 @@ class AutoCompleteViewTest < Test::Unit::TestCase
         @file_name = @gen.file_name
         @controller_singular_name = @gen.controller_singular_name
         @auto_complete_attributes = @gen.auto_complete_attributes
-        template_file = File.open(File.join(File.dirname(__FILE__), "../../../lib/view_mapper/views/auto_complete/templates/controller.rb"))
+        template_file = File.open(@gen.source_path("controller.rb"))
         result = ERB.new(template_file.read, nil, '-').result(binding)
         expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/testies_controller.rb"))
         assert_equal expected_file.read, result

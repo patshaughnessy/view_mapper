@@ -5,8 +5,7 @@ require 'shoulda'
 require 'mocha'
 require 'activerecord'
 
-config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
-ActiveRecord::Base.establish_connection(config['test'])
+ActiveRecord::Base.establish_connection({ :adapter => 'sqlite3', :database => ':memory:' })
 
 require 'rails_generator'
 require 'rails_generator/scripts'
