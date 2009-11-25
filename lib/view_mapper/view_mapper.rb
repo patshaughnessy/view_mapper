@@ -12,7 +12,6 @@ module ViewMapper
     source_roots_for_view.map do |source_root|
       File.join(File.expand_path(source_root), relative_source)
     end.detect do |path|
-      puts "Exists? #{path}"
       File.exists? path
     end
   end
