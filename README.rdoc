@@ -41,6 +41,8 @@ This is the same as view_for, but will also generate a new model at the same tim
 
 {has_many}[http://patshaughnessy.net/2009/11/9/scaffolding-for-complex-forms-using-nested-attributes]: Generates scaffolding for a complex form to edit two or more associated models.
 
+{has_many_auto_complete}[http://patshaughnessy.net/2009/11/25/scaffolding-for-auto-complete-on-a-complex-nested-form]: This is the same as "has_many" but also uses the auto_complete plugin to implement type ahead behavior for each text field. This view requires you to install the {repeated_auto_complete}[http://patshaughnessy.net/repeated_auto_complete] plugin.
+
 == Examples
 
 For detailed examples and more information see: http://patshaughnessy.net/view_mapper
