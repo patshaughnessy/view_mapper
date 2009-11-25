@@ -9,10 +9,14 @@ module ViewMapper
   end
 
   def source_path(relative_source)
-    source_roots_for_view.map do |source_root|
-      File.join(File.expand_path(source_root), relative_source)
-    end.detect do |path|
-      File.exists? path
+    if options[:view]
+      source_roots_for_view.map do |source_root|
+        File.join(File.expand_path(source_root), relative_source)
+      end.detect do |path|
+        File.exists? path
+      end
+    else
+      super
     end
   end
 
