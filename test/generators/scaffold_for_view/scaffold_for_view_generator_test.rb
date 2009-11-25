@@ -69,7 +69,7 @@ class ScaffoldForViewGeneratorTest < Test::Unit::TestCase
     end
 
     should "return the source root folder for the Rails scaffold generator" do
-      assert_equal './test/rails_generator/generators/components/scaffold/templates', @scaffold_for_view_gen.source_root
+      assert_equal @scaffold_for_view_gen.class.lookup('scaffold').path + '/templates', @scaffold_for_view_gen.source_root
     end
 
   end

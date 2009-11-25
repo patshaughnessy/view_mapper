@@ -9,13 +9,9 @@ class ViewForGenerator < ScaffoldGenerator
 
   def initialize(runtime_args, runtime_options = {})
     super
-    @source_root = source_root_for_view
+    @source_root = self.class.lookup('scaffold').path + "/templates"
     @model = ModelInfo.new(@name)
     validate
-  end
-
-  def source_root_for_view
-    self.class.lookup('scaffold').path + "/templates"
   end
 
   def record

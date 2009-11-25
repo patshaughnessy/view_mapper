@@ -3,8 +3,12 @@ module ViewMapper
 
     include HasManyChildModels
 
-    def source_root_for_view
+    def self.source_root
       File.expand_path(File.dirname(__FILE__) + "/templates")
+    end
+
+    def source_roots_for_view
+      [ view_module.source_root, File.expand_path(source_root), File.join(self.class.lookup('model').path, 'templates') ]
     end
 
     def manifest
