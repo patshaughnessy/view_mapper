@@ -6,7 +6,7 @@ module ViewMapper
     end
 
     def source_roots_for_view
-      [ view_module.source_root, File.expand_path(source_root), File.join(self.class.lookup('model').path, 'templates') ]
+      [ PaperclipView.source_root, File.expand_path(source_root), File.join(self.class.lookup('model').path, 'templates') ]
     end
 
     def manifest

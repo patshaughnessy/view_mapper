@@ -133,7 +133,7 @@ class PaperclipViewTest < Test::Unit::TestCase
       assert_equal File.expand_path(File.dirname(__FILE__) + '/../../..//lib/view_mapper/views/paperclip/templates'), ViewMapper::PaperclipView.source_root
     end
 
-    should "have the proper default value for source_roots_for_view" do
+    should "have the proper value for source_roots_for_view" do
       assert_equal [
         File.expand_path(File.dirname(__FILE__) + '/../../..//lib/view_mapper/views/paperclip/templates'),
         @gen.class.lookup('scaffold').path + '/templates',
