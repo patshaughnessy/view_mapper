@@ -13,17 +13,17 @@ class ViewMapperTest < Test::Unit::TestCase
 
     should "have the proper default value for source_roots_for_view" do
       assert_equal [
-        '/Users/pat/rails-apps/view_mapper/test/views/fake/templates',
-        '/Users/pat/rails-apps/view_mapper/test/generators/fake/templates'
+        File.expand_path(File.dirname(__FILE__) + '/views/fake/templates'),
+        File.expand_path(File.dirname(__FILE__) + '/generators/fake/templates')
       ], @gen.source_roots_for_view
     end
 
     should "use the correct source path for a template file that is overridden in the view" do
-      assert_equal '/Users/pat/rails-apps/view_mapper/test/views/fake/templates/fake_template1.html.erb', @gen.source_path('fake_template1.html.erb')
+      assert_equal File.expand_path(File.dirname(__FILE__) + '/views/fake/templates/fake_template1.html.erb'), @gen.source_path('fake_template1.html.erb')
     end
 
     should "use the correct source path for a template file that is not overridden in the view" do
-      assert_equal '/Users/pat/rails-apps/view_mapper/test/generators/fake/templates/fake_template2.html.erb', @gen.source_path('fake_template2.html.erb')
+      assert_equal File.expand_path(File.dirname(__FILE__) + '/generators/fake/templates/fake_template2.html.erb'), @gen.source_path('fake_template2.html.erb')
     end
   end
 

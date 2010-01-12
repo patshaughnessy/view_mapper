@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{view_mapper}
-  s.version = "0.3.1"
+  s.version = "0.3.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Shaughnessy"]
-  s.date = %q{2009-11-25}
+  s.date = %q{2010-01-22}
   s.description = %q{View_mapper will generate scaffolding for new or existing models, customized for the plugins you use in your app.}
   s.email = %q{pat@patshaughnessy.net}
   s.extra_rdoc_files = [
@@ -38,6 +38,14 @@ Gem::Specification.new do |s|
      "lib/view_mapper/views/auto_complete/templates/layout.html.erb",
      "lib/view_mapper/views/auto_complete/templates/view_edit.html.erb",
      "lib/view_mapper/views/auto_complete/templates/view_new.html.erb",
+     "lib/view_mapper/views/belongs_to/belongs_to_view.rb",
+     "lib/view_mapper/views/belongs_to/templates/migration.rb",
+     "lib/view_mapper/views/belongs_to/templates/model.rb",
+     "lib/view_mapper/views/belongs_to/templates/view_edit.html.erb",
+     "lib/view_mapper/views/belongs_to/templates/view_form.html.erb",
+     "lib/view_mapper/views/belongs_to/templates/view_index.html.erb",
+     "lib/view_mapper/views/belongs_to/templates/view_new.html.erb",
+     "lib/view_mapper/views/belongs_to/templates/view_show.html.erb",
      "lib/view_mapper/views/has_many/has_many_view.rb",
      "lib/view_mapper/views/has_many/templates/helper.rb",
      "lib/view_mapper/views/has_many/templates/layout.html.erb",
@@ -75,6 +83,14 @@ Gem::Specification.new do |s|
      "test/views/auto_complete/expected_templates/standard_routes.rb",
      "test/views/auto_complete/expected_templates/testies.html.erb",
      "test/views/auto_complete/expected_templates/testies_controller.rb",
+     "test/views/belongs_to/belongs_to_test.rb",
+     "test/views/belongs_to/expected_templates/_form.html.erb",
+     "test/views/belongs_to/expected_templates/create_some_other_models.rb",
+     "test/views/belongs_to/expected_templates/edit.html.erb",
+     "test/views/belongs_to/expected_templates/index.html.erb",
+     "test/views/belongs_to/expected_templates/new.html.erb",
+     "test/views/belongs_to/expected_templates/show.html.erb",
+     "test/views/belongs_to/expected_templates/some_other_model.rb",
      "test/views/fake/fake_view.rb",
      "test/views/fake/templates/fake_template1.html.erb",
      "test/views/has_many/expected_templates/_form.html.erb",
@@ -113,6 +129,9 @@ Gem::Specification.new do |s|
      "test/views/auto_complete/expected_templates/expected_routes.rb",
      "test/views/auto_complete/expected_templates/standard_routes.rb",
      "test/views/auto_complete/expected_templates/testies_controller.rb",
+     "test/views/belongs_to/belongs_to_test.rb",
+     "test/views/belongs_to/expected_templates/create_some_other_models.rb",
+     "test/views/belongs_to/expected_templates/some_other_model.rb",
      "test/views/fake/fake_view.rb",
      "test/views/has_many/expected_templates/create_parents.rb",
      "test/views/has_many/expected_templates/parent.rb",

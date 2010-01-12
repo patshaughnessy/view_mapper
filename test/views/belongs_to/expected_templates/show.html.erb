@@ -1,0 +1,17 @@
+<p>
+  <b>Name:</b>
+  <%=h @some_other_model.name %>
+</p>
+
+<p>
+  <b>Parent:</b>
+  <%=h @some_other_model.parent_name %>
+</p>
+
+<p>
+  <b>Second Parent:</b>
+  <%=h @some_other_model.second_parent_name %>
+</p>
+
+<%= link_to 'Edit', edit_some_other_model_path(@some_other_model) %> |
+<%= link_to 'Back', some_other_models_path %>

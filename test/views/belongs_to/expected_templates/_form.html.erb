@@ -1,0 +1,13 @@
+<%= f.error_messages %>
+<p>
+  <%= f.label :name %><br />
+  <%= f.text_field :name %>
+</p>
+<p>
+  Parent:<br />
+  <%= f.collection_select(:parent_id, Parent.all, :id, :name, { :prompt => true }) %>
+</p>
+<p>
+  Second Parent:<br />
+  <%= f.collection_select(:second_parent_id, SecondParent.all, :id, :name, { :prompt => true }) %>
+</p>

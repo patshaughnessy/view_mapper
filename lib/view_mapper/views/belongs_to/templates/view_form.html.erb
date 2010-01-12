@@ -1,0 +1,13 @@
+<%%= f.error_messages %>
+<% for attribute in attributes -%>
+<p>
+  <%%= f.label :<%= attribute.name %> %><br />
+  <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+</p>
+<%- end -%>
+<% for parent_model in parent_models -%>
+<p>
+  <%= parent_model.name.titleize %>:<br />
+  <%%= f.collection_select(:<%= parent_model.name.underscore %>_id, <%= parent_model.name %>.all, :id, :name, { :prompt => true }) %>
+</p>
+<% end -%>

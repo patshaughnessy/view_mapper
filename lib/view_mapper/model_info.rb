@@ -19,6 +19,14 @@ module ViewMapper
       @columns ||= active_record_columns.collect { |col| col.name }
     end
 
+    def has_column?(col_name)
+      model.column_names.include? col_name
+    end
+
+    def has_method?(method_name)
+      model.new.methods.include?(method_name)
+    end
+
     def attributes
       @attributes ||= active_record_columns.collect { |col| Rails::Generator::GeneratedAttribute.new col.name, col.type }
     end
@@ -44,7 +52,15 @@ module ViewMapper
     end
 
     def child_models
-      model.reflections.select { |key, value| value.macro == :has_many }.collect do |kvpair|
+      model_info_array_for_association(:has_many)
+    end
+
+    def parent_models
+      model_info_array_for_association(:belongs_to)
+    end
+
+    def model_info_array_for_association(association_type)
+      model.reflections.select { |key, value| value.macro == association_type }.collect do |kvpair|
         kvpair[0].to_s.singularize
       end.sort.collect do |model_name|
         ModelInfo.new model_name
@@ -74,6 +90,10 @@ module ViewMapper
 
     def has_foreign_key_for?(parent_model_name)
       model.columns.detect { |col| is_foreign_key_for?(col, parent_model_name) }
+    end
+
+    def has_virtual_name_method?(parent_model_name)
+      model.new.methods.include? "#{parent_model_name.underscore}_name"
     end
 
     private

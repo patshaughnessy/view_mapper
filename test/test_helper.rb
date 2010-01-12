@@ -3,7 +3,7 @@ require 'rubygems'
 require 'test/unit'
 require 'shoulda'
 require 'mocha'
-require 'activerecord'
+require 'active_record'
 
 ActiveRecord::Base.establish_connection({ :adapter => 'sqlite3', :database => ':memory:' })
 
@@ -54,7 +54,7 @@ def setup_test_model(paperclip_columns = false)
   Object.const_get("Testy")
 end
 
-def setup_parent_test_model(create_foreign_key = true, child_belongs_to_parent = true)
+def setup_parent_test_model(create_foreign_key = true, child_belongs_to_parent = true, parent_has_many_children = true)
   ActiveRecord::Base.connection.create_table :parents, :force => true do |table|
     table.column :name, :string
   end
@@ -69,7 +69,7 @@ def setup_parent_test_model(create_foreign_key = true, child_belongs_to_parent =
   Object.const_set("SomeOtherModel", Class.new(ActiveRecord::Base))
   Parent.class_eval do
     has_many :testies
-    has_many :some_other_model
+    has_many :some_other_models unless !parent_has_many_children
     def testies_attributes=
       'fake'
     end
@@ -82,8 +82,36 @@ def setup_parent_test_model(create_foreign_key = true, child_belongs_to_parent =
   end
   SomeOtherModel.class_eval do
     belongs_to :parent
+    def parent_name
+      'something'
+    end
   end
   Object.const_get("Parent")
+end
+
+def setup_second_parent_test_model(has_name_virtual_attribute = true, has_foreign_key = true, parent_has_name_method = false, parent_has_name_column = true)
+  ActiveRecord::Base.connection.create_table :second_parents, :force => true do |table|
+    table.column :name, :string unless !parent_has_name_column
+    table.column :other_field, :string
+  end
+  ActiveRecord::Base.connection.add_column :some_other_models, :second_parent_id, :integer unless !has_foreign_key
+  Object.send(:remove_const, "SecondParent") rescue nil
+  Object.const_set("SecondParent", Class.new(ActiveRecord::Base))
+  SecondParent.class_eval do
+    has_many :some_other_models
+    def some_other_models_attributes=
+      'fake'
+    end
+    def name
+      'fake'
+    end unless !parent_has_name_method
+  end
+  SomeOtherModel.class_eval do
+    belongs_to :second_parent
+    def second_parent_name
+      'something'
+    end unless !has_name_virtual_attribute
+  end
 end
 
 def setup_test_model_without_nested_attributes
