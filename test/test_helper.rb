@@ -51,6 +51,7 @@ def setup_test_model(paperclip_columns = false)
     end
   end
   ActiveRecord::Base.send(:include, MockPaperclip)
+  ActionController::Base.send(:include, MockAutoComplete)
   Object.const_get("Testy")
 end
 
@@ -142,8 +143,15 @@ class Rails::Generator::NamedBase
 end
 
 module ActionController
-  class Base
-    def self.auto_complete_for
+  class Base; end
+end
+
+module MockAutoComplete
+  def self.included(base)
+    base.extend(ClassMethods)
+  end
+  module ClassMethods
+    def auto_complete_for
     end
   end
 end

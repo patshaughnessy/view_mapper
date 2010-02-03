@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-class BelongsToViewTest < Test::Unit::TestCase
+class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
 
   attr_reader :singular_name
   attr_reader :attributes
@@ -18,14 +18,14 @@ class BelongsToViewTest < Test::Unit::TestCase
     end
 
     should "detect the existing parents when no parent is specified" do
-      gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to'], 'some_other_model')
+      gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model')
       parent_models = gen.parent_models
       assert_equal 1, parent_models.size
       assert_equal 'Parent', parent_models[0].name
     end
 
     should "use the specified parent if provided" do
-      gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to:parent'], 'some_other_model')
+      gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model')
       parent_models = gen.parent_models
       assert_equal 1, parent_models.size
       assert_equal 'Parent', parent_models[0].name
@@ -33,7 +33,7 @@ class BelongsToViewTest < Test::Unit::TestCase
 
     should "return an error message with a bad parent param" do
       Rails::Generator::Base.logger.expects('error').with('Class \'blah\' does not exist or contains a syntax error and could not be loaded.')
-      new_generator_for_test_model('view_for', ['--view', 'belongs_to:blah'])
+      new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:blah'])
     end
   end
 
@@ -43,15 +43,15 @@ class BelongsToViewTest < Test::Unit::TestCase
       setup_parent_test_model
     end
 
-    should "return a warning when run with scaffold_for_view when no belongs_to is specified and not run any actions" do
+    should "return a warning when run with scaffold_for_view when no belongs_to_auto_complete is specified and not run any actions" do
       expect_no_actions
       Rails::Generator::Base.logger.expects('error').with('No belongs_to association specified.')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to']))
+      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to_auto_complete']))
     end
   end
 
-  context "A test model with no belongs_to associations" do
+  context "A test model with no belongs_to_auto_complete associations" do
     setup do
       setup_test_model
       setup_parent_test_model(true, false)
@@ -61,18 +61,18 @@ class BelongsToViewTest < Test::Unit::TestCase
       expect_no_actions
       Rails::Generator::Base.logger.expects('error').with('No belongs_to associations exist in class Testy.')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to']))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete']))
     end
 
     should "return a error when run with scaffold_for_view and not run any actions" do
       expect_no_actions
       Rails::Generator::Base.logger.expects('error').with('No belongs_to association specified.')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to']))
+      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to_auto_complete']))
     end
   end
 
-  context "A test model with a belongs_to association for a model for which it does not have a name virtual attribute" do
+  context "A test model with a belongs_to_auto_complete association for a model for which it does not have a name virtual attribute" do
     setup do
       setup_test_model
       setup_parent_test_model
@@ -83,7 +83,7 @@ class BelongsToViewTest < Test::Unit::TestCase
       expect_no_actions
       Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not have a method second_parent_name.')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to:second_parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:second_parent'], 'some_other_model'))
     end
 
     should "return a warning and not include the problem model when run with view_for but continue to run for other models" do
@@ -91,11 +91,11 @@ class BelongsToViewTest < Test::Unit::TestCase
       Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not have a method second_parent_name.')
       Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model'))
     end
   end
 
-  context "A test model with a belongs_to association for a model which does not have a name method or column" do
+  context "A test model with a belongs_to_auto_complete association for a model which does not have a name method or column" do
     setup do
       setup_test_model
       setup_parent_test_model
@@ -106,7 +106,7 @@ class BelongsToViewTest < Test::Unit::TestCase
       expect_no_actions
       Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name attribute.')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to:second_parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:second_parent'], 'some_other_model'))
     end
 
     should "return a warning and not include the problem model when run with view_for but continue to run for other models" do
@@ -114,11 +114,11 @@ class BelongsToViewTest < Test::Unit::TestCase
       Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name attribute.')
       Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model'))
     end
   end
 
-  context "A test model with a belongs_to association for a model which has a name method but not a name column" do
+  context "A test model with a belongs_to_auto_complete association for a model which has a name method but not a name column" do
     setup do
       setup_test_model
       setup_parent_test_model
@@ -129,11 +129,11 @@ class BelongsToViewTest < Test::Unit::TestCase
       stub_actions
       Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to:second_parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:second_parent'], 'some_other_model'))
     end
   end
 
-  context "A test model with a belongs_to association for a model for which it does not have a foreign key" do
+  context "A test model with a belongs_to_auto_complete association for a model for which it does not have a foreign key" do
     setup do
       setup_test_model
       setup_parent_test_model
@@ -144,7 +144,7 @@ class BelongsToViewTest < Test::Unit::TestCase
       expect_no_actions
       Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not contain a foreign key for SecondParent.')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to:second_parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:second_parent'], 'some_other_model'))
     end
 
     should "return a warning and not include the problem model when run with view_for but continue to run for other models" do
@@ -152,20 +152,20 @@ class BelongsToViewTest < Test::Unit::TestCase
       Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not contain a foreign key for SecondParent.')
       Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model'))
     end
   end
 
-  context "A view_for generator instantiated for a test model with two belongs_to associations" do
+  context "A view_for generator instantiated for a test model with two belongs_to_auto_complete associations" do
     setup do
       setup_test_model
       setup_parent_test_model
       setup_second_parent_test_model
-      @gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to'], 'some_other_model')
+      @gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model')
     end
 
     should "return the proper source root" do
-      assert_equal File.expand_path(File.dirname(__FILE__) + '/../../..//lib/view_mapper/views/belongs_to/templates'), ViewMapper::BelongsToView.source_root
+      assert_equal File.expand_path(File.dirname(__FILE__) + '/../../..//lib/view_mapper/views/belongs_to_auto_complete/templates'), ViewMapper::BelongsToAutoCompleteView.source_root
     end
 
     view_for_templates = %w{ new edit index show }
@@ -194,12 +194,12 @@ class BelongsToViewTest < Test::Unit::TestCase
     end
   end
 
-  context "A scaffold_for_view generator instantiated for a test model with two belongs_to associations" do
+  context "A scaffold_for_view generator instantiated for a test model with two belongs_to_auto_complete associations" do
     setup do
       setup_test_model
       setup_parent_test_model
       setup_second_parent_test_model
-      @gen = new_generator_for_test_model('scaffold_for_view', ['--view', 'belongs_to:parent,second_parent'], 'some_other_model')
+      @gen = new_generator_for_test_model('scaffold_for_view', ['--view', 'belongs_to_auto_complete:parent,second_parent'], 'some_other_model')
     end
 
     should "render the model template as expected" do
@@ -237,7 +237,7 @@ class BelongsToViewTest < Test::Unit::TestCase
       expect_no_actions
       Rails::Generator::Base.logger.expects('error').with('Class \'blah\' does not exist or contains a syntax error and could not be loaded.')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to:blah'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:blah'], 'some_other_model'))
     end
 
     should "create the correct manifest when the view_for generator is run with a valid parent model" do
@@ -273,7 +273,7 @@ class BelongsToViewTest < Test::Unit::TestCase
       Rails::Generator::Commands::Create.any_instance.expects(:file).never
       Rails::Generator::Commands::Create.any_instance.expects(:dependency).never
 
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to:parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model'))
     end
 
     should "create the correct manifest when the scaffold_for_view generator is run with a valid parent model" do
@@ -321,7 +321,7 @@ class BelongsToViewTest < Test::Unit::TestCase
         :migration_file_name => "create_some_other_models"
       )
 
-      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to:parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model'))
     end
   end
 
@@ -335,14 +335,26 @@ class BelongsToViewTest < Test::Unit::TestCase
     should "return a warning when run with view_for and not run any actions" do
       expect_no_actions
       Rails::Generator::Base.logger.expects('warning').with('Model Parent does not contain a has_many association for SomeOtherModel.')
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to:parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model'))
     end
 
     should "return a warning when run with scaffold_for_view and not run any actions" do
       expect_no_actions
       Rails::Generator::Base.logger.expects('warning').with('Model Parent does not contain a has_many association for SomeOtherModel.')
-      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to:parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model'))
     end
   end
 
+  context "A Rails generator script" do
+    setup do
+      @generator_script = Rails::Generator::Scripts::Generate.new
+    end
+
+    should "return an error when run when the auto_complete plugin is not installed" do
+      expect_no_actions
+      Rails::Generator::Base.logger.expects('error').with('The auto_complete plugin does not appear to be installed.')
+      ActionController::Base.stubs(:methods).returns([])
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model'))
+    end
+  end
 end

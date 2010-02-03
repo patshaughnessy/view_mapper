@@ -1,0 +1,13 @@
+<%%= f.error_messages %>
+<% for attribute in attributes -%>
+<p>
+  <%%= f.label :<%= attribute.name %> %><br />
+  <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+</p>
+<%- end -%>
+<% for parent_model in parent_models -%>
+<p>
+  <%= parent_model.name.titleize %>:<br />
+  <%%= text_field_with_auto_complete :<%= singular_name %>, :<%= parent_model.name.underscore %>_name, {}, { :method => :get, :url => '/auto_complete_for_<%= parent_model.name.underscore %>_name', :param_name => '<%= parent_model.name.underscore %>[name]' } %>
+</p>
+<% end -%>
