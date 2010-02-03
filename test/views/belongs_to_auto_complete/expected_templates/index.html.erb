@@ -1,0 +1,24 @@
+<h1>Listing some_other_models</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Parent</th>
+    <th>Second Parent</th>
+  </tr>
+
+<% @some_other_models.each do |some_other_model| %>
+  <tr>
+    <td><%=h some_other_model.name %></td>
+    <td><%=h some_other_model.parent_name %></td>
+    <td><%=h some_other_model.second_parent_name %></td>
+    <td><%= link_to 'Show', some_other_model %></td>
+    <td><%= link_to 'Edit', edit_some_other_model_path(some_other_model) %></td>
+    <td><%= link_to 'Destroy', some_other_model, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New some_other_model', new_some_other_model_path %>

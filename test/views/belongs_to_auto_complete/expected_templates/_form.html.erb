@@ -1,0 +1,13 @@
+<%= f.error_messages %>
+<p>
+  <%= f.label :name %><br />
+  <%= f.text_field :name %>
+</p>
+<p>
+  Parent:<br />
+  <%= text_field_with_auto_complete :shirt, :parent_name, {}, { :method => :get, :url => '/auto_complete_for_parent_name', :param_name => 'parent[name]' } %>
+</p>
+<p>
+  Second Parent:<br />
+  <%= text_field_with_auto_complete :shirt, :second_parent_name, {}, { :method => :get, :url => '/auto_complete_for_second_parent_name', :param_name => 'second_parent[name]' } %>
+</p>

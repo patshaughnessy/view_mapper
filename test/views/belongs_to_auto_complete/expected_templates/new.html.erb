@@ -1,0 +1,10 @@
+<h1>New some_other_model</h1>
+
+<% form_for(@some_other_model) do |f| %>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', some_other_models_path %>
