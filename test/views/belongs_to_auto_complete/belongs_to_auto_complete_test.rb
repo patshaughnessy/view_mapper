@@ -35,6 +35,17 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       Rails::Generator::Base.logger.expects('error').with('Class \'blah\' does not exist or contains a syntax error and could not be loaded.')
       new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:blah'])
     end
+
+    should "use 'name' as the default parent attribute" do
+      gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model')
+      assert_equal 'name', gen.parent_model_attributes['parent']
+    end
+
+    should "parse the parent model attribute" do
+      Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not have a method parent_first_name.')
+      gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:parent[first_name]'], 'some_other_model')
+      assert_equal 'first_name', gen.parent_model_attributes['parent']
+    end
   end
 
   context "A scaffold_for_view generator instantiated for a test model" do
@@ -51,7 +62,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     end
   end
 
-  context "A test model with no belongs_to_auto_complete associations" do
+  context "A test model with no belongs_to associations" do
     setup do
       setup_test_model
       setup_parent_test_model(true, false)
@@ -72,7 +83,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     end
   end
 
-  context "A test model with a belongs_to_auto_complete association for a model for which it does not have a name virtual attribute" do
+  context "A test model with a belongs_to association for a model for which it does not have a name virtual attribute" do
     setup do
       setup_test_model
       setup_parent_test_model
@@ -95,7 +106,21 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     end
   end
 
-  context "A test model with a belongs_to_auto_complete association for a model which does not have a name method or column" do
+  context "A test model with a belongs_to association for a model that has some other virtual attribute missing" do
+    setup do
+      setup_test_model
+      setup_parent_test_model
+    end
+
+    should "return a warning and stop when the problem model is specified" do
+      expect_no_actions
+      Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not have a method parent_first_name.')
+      @generator_script = Rails::Generator::Scripts::Generate.new
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent[first_name]'], 'some_other_model'))
+    end
+  end
+
+  context "A test model with a belongs_to association for a model which does not have a name method or column" do
     setup do
       setup_test_model
       setup_parent_test_model
@@ -104,36 +129,36 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
 
     should "return a warning and stop when the problem model is specified" do
       expect_no_actions
-      Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name attribute.')
+      Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name column.')
       @generator_script = Rails::Generator::Scripts::Generate.new
       @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:second_parent'], 'some_other_model'))
     end
 
     should "return a warning and not include the problem model when run with view_for but continue to run for other models" do
       stub_actions
-      Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name attribute.')
+      Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name column.')
       Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
       @generator_script = Rails::Generator::Scripts::Generate.new
       @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model'))
     end
   end
 
-  context "A test model with a belongs_to_auto_complete association for a model which has a name method but not a name column" do
+  context "A test model with a belongs_to association for a model which does not have some other attribute or column" do
     setup do
       setup_test_model
       setup_parent_test_model
-      setup_second_parent_test_model(true, true, true, false)
+      ViewMapper::ModelInfo.any_instance.stubs(:has_method?).returns(:true)
     end
 
-    should "continue to generate as usual" do
-      stub_actions
-      Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
+    should "return a warning and stop when the problem model is specified" do
+      expect_no_actions
+      Rails::Generator::Base.logger.expects('warning').with('Model Parent does not have a missing_field column.')
       @generator_script = Rails::Generator::Scripts::Generate.new
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:second_parent'], 'some_other_model'))
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent[missing_field]'], 'some_other_model'))
     end
   end
 
-  context "A test model with a belongs_to_auto_complete association for a model for which it does not have a foreign key" do
+  context "A test model with a belongs_to association for a model for which it does not have a foreign key" do
     setup do
       setup_test_model
       setup_parent_test_model
@@ -156,7 +181,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     end
   end
 
-  context "A view_for generator instantiated for a test model with two belongs_to_auto_complete associations" do
+  context "A view_for generator instantiated for a test model with two belongs_to associations" do
     setup do
       setup_test_model
       setup_parent_test_model
@@ -194,7 +219,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     end
   end
 
-  context "A scaffold_for_view generator instantiated for a test model with two belongs_to_auto_complete associations" do
+  context "A scaffold_for_view generator instantiated for a test model with two belongs_to associations" do
     setup do
       setup_test_model
       setup_parent_test_model

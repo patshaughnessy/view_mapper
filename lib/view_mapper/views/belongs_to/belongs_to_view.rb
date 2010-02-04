@@ -85,7 +85,7 @@ module ViewMapper
       elsif view_only? && !model.belongs_to?(parent_model.name)
         logger.warning "Model #{model.name} does not belong to model #{parent_model.name}."
         return false
-      elsif view_only? && !model.has_virtual_name_method?(parent_model.name)
+      elsif view_only? && !model.has_a_method?("#{parent_model.name.underscore}_name")
         logger.warning "Model #{model.name} does not have a method #{parent_model.name.underscore}_name."
         return false
       elsif view_only? && !model.has_foreign_key_for?(parent_model.name)

@@ -48,13 +48,32 @@ module ViewMapper
       @parent_models ||= find_parent_models
     end
 
+    def parent_model_attributes
+      @parent_models_attributes ||= {}
+    end
+
     def find_parent_models
       if view_param
-        view_param.split(',').collect { |param| ModelInfo.new(param.singularize) }
+        view_param.split(',').collect do |param|
+          model_info_from_param(param)
+        end
       elsif view_only?
-        model.parent_models
+        model.parent_models.each do |parent_model|
+          parent_model_attributes[parent_model.name.underscore] = 'name'
+        end
       else
         []
+      end
+    end
+
+    def model_info_from_param(param)
+      if /(.*)\[(.*)\]/.match(param)
+        model_name = $1.singularize
+        parent_model_attributes[model_name] = $2
+        ModelInfo.new(model_name)
+      else
+        parent_model_attributes[param] = 'name'
+        ModelInfo.new(param.singularize)
       end
     end
 
@@ -80,26 +99,32 @@ module ViewMapper
     end
 
     def validate_parent_model(parent_model)
+      model_name = parent_model.name
       if !parent_model.valid?
         logger.error parent_model.error
         return false
-      elsif view_only? && !model.belongs_to?(parent_model.name)
-        logger.warning "Model #{model.name} does not belong to model #{parent_model.name}."
+      elsif view_only? && !model.belongs_to?(model_name)
+        logger.warning "Model #{model.name} does not belong to model #{model_name}."
         return false
-      elsif view_only? && !model.has_virtual_name_method?(parent_model.name)
-        logger.warning "Model #{model.name} does not have a method #{parent_model.name.underscore}_name."
+      elsif view_only? && !model.has_method?(parent_virtual_attribute_method(parent_model))
+        logger.warning "Model #{model.name} does not have a method #{parent_virtual_attribute_method(parent_model)}."
         return false
-      elsif view_only? && !model.has_foreign_key_for?(parent_model.name)
-        logger.warning "Model #{class_name} does not contain a foreign key for #{parent_model.name}."
+      elsif view_only? && !model.has_foreign_key_for?(model_name)
+        logger.warning "Model #{class_name} does not contain a foreign key for #{model_name}."
         return false
       elsif !parent_model.has_many?(class_name.pluralize)
-        logger.warning "Model #{parent_model.name} does not contain a has_many association for #{class_name}."
+        logger.warning "Model #{model_name} does not contain a has_many association for #{class_name}."
         return false
-      elsif !parent_model.has_column?('name') && !parent_model.has_method?('name')
-        logger.warning "Model #{parent_model.name} does not have a name attribute."
+      elsif !parent_model.has_column?(parent_model_attributes[model_name.underscore])
+        logger.warning "Model #{model_name} does not have a #{parent_model_attributes[model_name.underscore]} column."
         return false
       end
       true
+    end
+
+    def parent_virtual_attribute_method(parent_model)
+      name = parent_model.name.underscore
+      "#{name}_#{parent_model_attributes[name]}"
     end
 
     def validate_auto_complete_installed

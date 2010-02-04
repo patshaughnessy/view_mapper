@@ -92,8 +92,8 @@ module ViewMapper
       model.columns.detect { |col| is_foreign_key_for?(col, parent_model_name) }
     end
 
-    def has_virtual_name_method?(parent_model_name)
-      model.new.methods.include? "#{parent_model_name.underscore}_name"
+    def has_a_method?(method_name)
+      model.new.methods.include? method_name
     end
 
     private
