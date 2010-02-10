@@ -89,7 +89,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     setup do
       setup_test_model
       setup_parent_test_model
-      setup_second_parent_test_model(false)
+      setup_second_parent_test_model(true, false)
     end
 
     should "return a warning and stop when the problem model is specified" do
@@ -102,6 +102,29 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     should "return a warning and not include the problem model when run with view_for but continue to run for other models" do
       stub_actions
       Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not have a method second_parent_name.')
+      Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
+      @generator_script = Rails::Generator::Scripts::Generate.new
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model'))
+    end
+  end
+
+  context "A test model with a belongs_to association for a model for which it does not have a name virtual attribute setter" do
+    setup do
+      setup_test_model
+      setup_parent_test_model
+      setup_second_parent_test_model(false, true)
+    end
+
+    should "return a warning and stop when the problem model is specified" do
+      expect_no_actions
+      Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not have a method second_parent_name=.')
+      @generator_script = Rails::Generator::Scripts::Generate.new
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:second_parent'], 'some_other_model'))
+    end
+
+    should "return a warning and not include the problem model when run with view_for but continue to run for other models" do
+      stub_actions
+      Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not have a method second_parent_name=.')
       Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
       @generator_script = Rails::Generator::Scripts::Generate.new
       @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model'))
@@ -126,19 +149,19 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     setup do
       setup_test_model
       setup_parent_test_model
-      setup_second_parent_test_model(true, true, false, false)
+      setup_second_parent_test_model(true, true, true, false, false)
     end
 
     should "return a warning and stop when the problem model is specified" do
       expect_no_actions
-      Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name column.')
+      Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name attribute.')
       @generator_script = Rails::Generator::Scripts::Generate.new
       @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:second_parent'], 'some_other_model'))
     end
 
     should "return a warning and not include the problem model when run with view_for but continue to run for other models" do
       stub_actions
-      Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name column.')
+      Rails::Generator::Base.logger.expects('warning').with('Model SecondParent does not have a name attribute.')
       Rails::Generator::Commands::Create.any_instance.expects(:directory).with('app/controllers/')
       @generator_script = Rails::Generator::Scripts::Generate.new
       @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model'))
@@ -164,7 +187,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     setup do
       setup_test_model
       setup_parent_test_model
-      setup_second_parent_test_model(true, false)
+      setup_second_parent_test_model(true, true, false)
     end
 
     should "return a warning and stop when the problem model is specified" do

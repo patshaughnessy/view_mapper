@@ -86,11 +86,13 @@ def setup_parent_test_model(create_foreign_key = true, child_belongs_to_parent =
     def parent_name
       'something'
     end
+    def parent_name=
+    end
   end
   Object.const_get("Parent")
 end
 
-def setup_second_parent_test_model(has_name_virtual_attribute = true, has_foreign_key = true, parent_has_name_method = false, parent_has_name_column = true)
+def setup_second_parent_test_model(has_virtual_attribute_setter = true, has_virtual_attribute = true, has_foreign_key = true, parent_has_name_method = false, parent_has_name_column = true)
   ActiveRecord::Base.connection.create_table :second_parents, :force => true do |table|
     table.column :name, :string unless !parent_has_name_column
     table.column :other_field, :string
@@ -109,11 +111,21 @@ def setup_second_parent_test_model(has_name_virtual_attribute = true, has_foreig
   end
   SomeOtherModel.class_eval do
     belongs_to :second_parent
-    def second_parent_name
-      'something'
-    end unless !has_name_virtual_attribute
-    def second_parent_other_field
-      'something'
+    if has_virtual_attribute
+      def second_parent_name
+        'something'
+      end
+      def second_parent_other_field
+        'something'
+      end
+    end
+    if has_virtual_attribute_setter
+      def second_parent_name=
+        'something'
+      end
+      def second_parent_other_field=
+        'something'
+      end
     end
   end
 end

@@ -76,7 +76,7 @@ class BelongsToViewTest < Test::Unit::TestCase
     setup do
       setup_test_model
       setup_parent_test_model
-      setup_second_parent_test_model(false)
+      setup_second_parent_test_model(true, false)
     end
 
     should "return a warning and stop when the problem model is specified" do
@@ -99,7 +99,7 @@ class BelongsToViewTest < Test::Unit::TestCase
     setup do
       setup_test_model
       setup_parent_test_model
-      setup_second_parent_test_model(true, true, false, false)
+      setup_second_parent_test_model(true, true, true, false, false)
     end
 
     should "return a warning and stop when the problem model is specified" do
@@ -122,7 +122,7 @@ class BelongsToViewTest < Test::Unit::TestCase
     setup do
       setup_test_model
       setup_parent_test_model
-      setup_second_parent_test_model(true, true, true, false)
+      setup_second_parent_test_model(true, true, true, true, false)
     end
 
     should "continue to generate as usual" do
@@ -137,7 +137,7 @@ class BelongsToViewTest < Test::Unit::TestCase
     setup do
       setup_test_model
       setup_parent_test_model
-      setup_second_parent_test_model(true, false)
+      setup_second_parent_test_model(true, true, false)
     end
 
     should "return a warning and stop when the problem model is specified" do
