@@ -8,6 +8,6 @@
 <% for parent_model in parent_models -%>
 <p>
   <%= parent_model.name.titleize %>:<br />
-  <%%= text_field_with_auto_complete :<%= singular_name %>, :<%= parent_model.name.underscore %>_name, {}, { :method => :get, :url => '/auto_complete_for_<%= parent_model.name.underscore %>_name', :param_name => '<%= parent_model.name.underscore %>[name]' } %>
+  <%%= text_field_with_auto_complete :<%= singular_name %>, :<%= parent_model.name.underscore %>_<%= field_for(parent_model) %>, {}, { :method => :get, :url => '/auto_complete_for_<%= parent_model.name.underscore %>_<%= field_for(parent_model) %>', :param_name => '<%= parent_model.name.underscore %>[<%= field_for(parent_model) %>]' } %>
 </p>
 <% end -%>

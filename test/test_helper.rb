@@ -112,6 +112,9 @@ def setup_second_parent_test_model(has_name_virtual_attribute = true, has_foreig
     def second_parent_name
       'something'
     end unless !has_name_virtual_attribute
+    def second_parent_other_field
+      'something'
+    end
   end
 end
 

@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
-  map.connect 'auto_complete_for_testy_address', :controller => 'testies', :action => 'auto_complete_for_testy_address'
+  map.connect 'auto_complete_for_parent_name', :controller => 'some_other_models', :action => 'auto_complete_for_parent_name'
+
+  map.connect 'auto_complete_for_second_parent_other_field', :controller => 'some_other_models', :action => 'auto_complete_for_second_parent_other_field'
 
   # The priority is based upon order of creation: first created -> highest priority.
 

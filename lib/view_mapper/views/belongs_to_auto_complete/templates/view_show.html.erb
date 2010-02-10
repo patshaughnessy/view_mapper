@@ -8,7 +8,7 @@
 <% for parent_model in parent_models -%>
 <p>
   <b><%= parent_model.name.titleize %>:</b>
-  <%%=h @<%= singular_name %>.<%= parent_model.name.underscore %>_name %>
+  <%%=h @<%= singular_name %>.<%= parent_model.name.underscore %>_<%= field_for(parent_model) %> %>
 </p>
 
 <% end -%>

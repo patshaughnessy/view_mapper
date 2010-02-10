@@ -21,6 +21,12 @@ module ViewMapper
           File.join('app/views', controller_class_path, controller_file_name, "_form.html.erb")
         )
         add_model_actions(m) unless view_only?
+        parent_models.reverse.each do |parent_model|
+          m.route :name       => 'connect',
+                  :path       => auto_complete_for_method(parent_model),
+                  :controller => controller_file_name,
+                  :action     => auto_complete_for_method(parent_model)
+        end
       end
       m
     end
@@ -44,12 +50,12 @@ module ViewMapper
       action[0] == :dependency && action[1].include?('model')
     end
 
-    def parent_models
-      @parent_models ||= find_parent_models
+    def auto_complete_for_method(parent_model)
+      "auto_complete_for_#{parent_model.name.underscore}_#{field_for(parent_model)}"
     end
 
-    def parent_model_attributes
-      @parent_models_attributes ||= {}
+    def parent_models
+      @parent_models ||= find_parent_models
     end
 
     def find_parent_models
@@ -58,9 +64,10 @@ module ViewMapper
           model_info_from_param(param)
         end
       elsif view_only?
-        model.parent_models.each do |parent_model|
-          parent_model_attributes[parent_model.name.underscore] = 'name'
-        end
+        model.parent_models   #.each do |parent_model|
+          #select_parent_by parent_model, 'name'
+          #parent_fields[parent_model.name.underscore] = 'name'
+        #end
       else
         []
       end
@@ -68,13 +75,15 @@ module ViewMapper
 
     def model_info_from_param(param)
       if /(.*)\[(.*)\]/.match(param)
-        model_name = $1.singularize
-        parent_model_attributes[model_name] = $2
-        ModelInfo.new(model_name)
+        #parent_fields[model_name] = $2
+        parent_model = ModelInfo.new($1.singularize)
+        select_parent_by parent_model, $2
       else
-        parent_model_attributes[param] = 'name'
-        ModelInfo.new(param.singularize)
+        #parent_fields[param] = 'name'
+        parent_model = ModelInfo.new(param.singularize)
+        #select_parent_by parent_model, 'name'
       end
+      parent_model
     end
 
     def validate
@@ -99,33 +108,41 @@ module ViewMapper
     end
 
     def validate_parent_model(parent_model)
-      model_name = parent_model.name
+      #p parent_model
+      #p @parent_fields
+      parent_model_name = parent_model.name
       if !parent_model.valid?
         logger.error parent_model.error
         return false
-      elsif view_only? && !model.belongs_to?(model_name)
-        logger.warning "Model #{model.name} does not belong to model #{model_name}."
+      elsif view_only? && !model.belongs_to?(parent_model_name)
+        logger.warning "Model #{model.name} does not belong to model #{parent_model_name}."
         return false
-      elsif view_only? && !model.has_method?(parent_virtual_attribute_method(parent_model))
-        logger.warning "Model #{model.name} does not have a method #{parent_virtual_attribute_method(parent_model)}."
+      elsif view_only? && !model.has_method?(virtual_attribute_for(parent_model))
+        #puts caller
+        logger.warning "Model #{model.name} does not have a method #{virtual_attribute_for(parent_model)}."
         return false
-      elsif view_only? && !model.has_foreign_key_for?(model_name)
-        logger.warning "Model #{class_name} does not contain a foreign key for #{model_name}."
+      elsif view_only? && !model.has_foreign_key_for?(parent_model_name)
+        logger.warning "Model #{class_name} does not contain a foreign key for #{parent_model_name}."
         return false
       elsif !parent_model.has_many?(class_name.pluralize)
-        logger.warning "Model #{model_name} does not contain a has_many association for #{class_name}."
+        logger.warning "Model #{parent_model_name} does not contain a has_many association for #{class_name}."
         return false
-      elsif !parent_model.has_column?(parent_model_attributes[model_name.underscore])
-        logger.warning "Model #{model_name} does not have a #{parent_model_attributes[model_name.underscore]} column."
+      elsif !parent_model.has_column?(field_for(parent_model))
+        logger.warning "Model #{parent_model_name} does not have a #{field_for(parent_model)} column."
         return false
       end
       true
     end
 
-    def parent_virtual_attribute_method(parent_model)
-      name = parent_model.name.underscore
-      "#{name}_#{parent_model_attributes[name]}"
-    end
+#    def attribute_for_parent(parent_model)
+#      name = parent_model.name.underscore
+#      parent_fields[name]
+#    end
+#
+#    def virtual_attribute_method_for_parent(parent_model)
+#      name = parent_model.name.underscore
+#      "#{name}_#{parent_fields[name]}"
+#    end
 
     def validate_auto_complete_installed
       if !auto_complete_installed
@@ -138,5 +155,25 @@ module ViewMapper
     def auto_complete_installed
       ActionController::Base.methods.include? 'auto_complete_for'
     end
+
+    def field_for(parent_model)
+      name = parent_fields[parent_model.name]
+      name ? name : 'name'
+    end
+
+    def virtual_attribute_for(parent_model)
+      "#{parent_model.name.underscore}_#{field_for(parent_model)}"
+    end
+
+    private
+
+    def select_parent_by(parent_model, field)
+      parent_fields[parent_model.name] = field
+    end
+
+    def parent_fields
+      @parent_fields ||= {}
+    end
+
   end
 end

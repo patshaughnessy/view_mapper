@@ -10,6 +10,8 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
   attr_reader :migration_name
   attr_reader :table_name
   attr_reader :options
+  attr_reader :controller_class_name
+  attr_reader :file_name
 
   context "A view_for generator instantiated for a test model" do
     setup do
@@ -36,15 +38,15 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:blah'])
     end
 
-    should "use 'name' as the default parent attribute" do
+    should "use 'name' as the default parent field" do
       gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model')
-      assert_equal 'name', gen.parent_model_attributes['parent']
+      assert_equal 'name', gen.field_for(ViewMapper::ModelInfo.new('parent'))
     end
 
-    should "parse the parent model attribute" do
+    should "parse the parent model field" do
       Rails::Generator::Base.logger.expects('warning').with('Model SomeOtherModel does not have a method parent_first_name.')
       gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:parent[first_name]'], 'some_other_model')
-      assert_equal 'first_name', gen.parent_model_attributes['parent']
+      assert_equal 'first_name', gen.field_for(ViewMapper::ModelInfo.new('parent'))
     end
   end
 
@@ -186,7 +188,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       setup_test_model
       setup_parent_test_model
       setup_second_parent_test_model
-      @gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete'], 'some_other_model')
+      @gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to_auto_complete:parent,second_parent[other_field]'], 'some_other_model')
     end
 
     should "return the proper source root" do
@@ -217,6 +219,27 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/_form.html.erb"))
       assert_equal expected_file.read, result
     end
+
+    should "render the layout template as expected" do
+      @controller_class_name = @gen.controller_class_name
+      template_file = File.open(@gen.source_path("layout.html.erb"))
+      result = ERB.new(template_file.read, nil, '-').result(binding)
+      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/some_other_models.html.erb"))
+      assert_equal expected_file.read, result
+    end
+
+    should "render the controller template as expected" do
+      @controller_class_name = @gen.controller_class_name
+      @table_name = @gen.table_name
+      @class_name = @gen.class_name
+      @file_name = @gen.file_name
+      @controller_class_name = @gen.controller_class_name
+      @parent_models = @gen.parent_models
+      template_file = File.open(@gen.source_path("controller.rb"))
+      result = ERB.new(template_file.read, nil, '-').result(binding)
+      expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/some_other_models_controller.rb"))
+      assert_equal expected_file.read, result
+    end
   end
 
   context "A scaffold_for_view generator instantiated for a test model with two belongs_to associations" do
@@ -224,7 +247,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       setup_test_model
       setup_parent_test_model
       setup_second_parent_test_model
-      @gen = new_generator_for_test_model('scaffold_for_view', ['--view', 'belongs_to_auto_complete:parent,second_parent'], 'some_other_model')
+      @gen = new_generator_for_test_model('scaffold_for_view', ['--view', 'belongs_to_auto_complete:parent,second_parent[other_field]'], 'some_other_model')
     end
 
     should "render the model template as expected" do
@@ -255,6 +278,36 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
     setup do
       setup_test_model
       setup_parent_test_model
+      setup_second_parent_test_model
+      @generator_script = Rails::Generator::Scripts::Generate.new
+    end
+
+    should "add the proper auto_complete route to routes.rb" do
+      Rails::Generator::Commands::Create.any_instance.stubs(:directory)
+      Rails::Generator::Commands::Create.any_instance.stubs(:template)
+      Rails::Generator::Commands::Create.any_instance.stubs(:route_resources)
+      Rails::Generator::Commands::Create.any_instance.stubs(:file)
+      Rails::Generator::Commands::Create.any_instance.stubs(:dependency)
+      Rails::Generator::Base.logger.stubs(:route)
+
+      expected_path = File.dirname(__FILE__) + '/expected_templates'
+      standard_routes_file = expected_path + '/standard_routes.rb'
+      expected_routes_file = expected_path + '/expected_routes.rb'
+      test_routes_file = expected_path + '/routes.rb'
+      ViewForGenerator.any_instance.stubs(:destination_path).returns test_routes_file
+      File.copy(standard_routes_file, test_routes_file)
+      Rails::Generator::Commands::Create.any_instance.stubs(:route_file).returns(test_routes_file)
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent,second_parent[other_field]'], 'some_other_model'))
+      assert_equal File.open(expected_routes_file).read, File.open(test_routes_file).read
+      File.delete(test_routes_file)
+    end
+  end
+
+  context "A Rails generator script" do
+    setup do
+      setup_test_model
+      setup_parent_test_model
+      setup_second_parent_test_model
       @generator_script = Rails::Generator::Scripts::Generate.new
     end
 
@@ -298,7 +351,19 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       Rails::Generator::Commands::Create.any_instance.expects(:file).never
       Rails::Generator::Commands::Create.any_instance.expects(:dependency).never
 
-      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model'))
+      Rails::Generator::Commands::Create.any_instance.expects(:route).with(
+        :path => 'auto_complete_for_parent_name',
+        :name => 'connect',
+        :action => 'auto_complete_for_parent_name',
+        :controller => 'some_other_models')
+
+      Rails::Generator::Commands::Create.any_instance.expects(:route).with(
+        :path => 'auto_complete_for_second_parent_other_field',
+        :name => 'connect',
+        :action => 'auto_complete_for_second_parent_other_field',
+        :controller => 'some_other_models')
+
+      @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent,second_parent[other_field]'], 'some_other_model'))
     end
 
     should "create the correct manifest when the scaffold_for_view generator is run with a valid parent model" do
@@ -346,7 +411,19 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
         :migration_file_name => "create_some_other_models"
       )
 
-      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model'))
+      Rails::Generator::Commands::Create.any_instance.expects(:route).with(
+        :path => 'auto_complete_for_parent_name',
+        :name => 'connect',
+        :action => 'auto_complete_for_parent_name',
+        :controller => 'some_other_models')
+
+      Rails::Generator::Commands::Create.any_instance.expects(:route).with(
+        :path => 'auto_complete_for_second_parent_other_field',
+        :name => 'connect',
+        :action => 'auto_complete_for_second_parent_other_field',
+        :controller => 'some_other_models')
+
+      @generator_script.run(generator_script_cmd_line('scaffold_for_view', ['--view', 'belongs_to_auto_complete:parent,second_parent[other_field]'], 'some_other_model'))
     end
   end
 
@@ -381,5 +458,9 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       ActionController::Base.stubs(:methods).returns([])
       @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent'], 'some_other_model'))
     end
+  end
+
+  def field_for(parent_model)
+    @gen.field_for(parent_model)
   end
 end
