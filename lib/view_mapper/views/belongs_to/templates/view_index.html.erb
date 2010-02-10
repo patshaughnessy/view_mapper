@@ -16,7 +16,7 @@
     <td><%%=h <%= singular_name %>.<%= attribute.name %> %></td>
 <% end -%>
 <% for parent_model in parent_models -%>
-    <td><%%=h <%= singular_name %>.<%= parent_model.name.underscore %>_name %></td>
+    <td><%%=h <%= singular_name %>.<%= parent_model.name.underscore %>_<%= field_for(parent_model) %> %></td>
 <% end -%>
     <td><%%= link_to 'Show', <%= singular_name %> %></td>
     <td><%%= link_to 'Edit', edit_<%= singular_name %>_path(<%= singular_name %>) %></td>

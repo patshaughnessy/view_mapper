@@ -161,7 +161,7 @@ class BelongsToViewTest < Test::Unit::TestCase
       setup_test_model
       setup_parent_test_model
       setup_second_parent_test_model
-      @gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to'], 'some_other_model')
+      @gen = new_generator_for_test_model('view_for', ['--view', 'belongs_to:parent,second_parent[other_field]'], 'some_other_model')
     end
 
     should "return the proper source root" do
@@ -345,4 +345,7 @@ class BelongsToViewTest < Test::Unit::TestCase
     end
   end
 
+  def field_for(parent_model)
+    @gen.field_for(parent_model)
+  end
 end
