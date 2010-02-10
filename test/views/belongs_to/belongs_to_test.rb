@@ -199,7 +199,7 @@ class BelongsToViewTest < Test::Unit::TestCase
       setup_test_model
       setup_parent_test_model
       setup_second_parent_test_model
-      @gen = new_generator_for_test_model('scaffold_for_view', ['--view', 'belongs_to:parent,second_parent'], 'some_other_model')
+      @gen = new_generator_for_test_model('scaffold_for_view', ['--view', 'belongs_to:parent,second_parent[other_field]'], 'some_other_model')
     end
 
     should "render the model template as expected" do

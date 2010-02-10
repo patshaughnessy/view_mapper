@@ -6,8 +6,8 @@ class <%= class_name %> < ActiveRecord::Base
   belongs_to :<%= parent_model.name.underscore %>
 <% end -%>
 <% for parent_model in parent_models -%>
-  def <%= parent_model.name.underscore %>_name
-    <%= parent_model.name.underscore %>.name if <%= parent_model.name.underscore %>
+  def <%= parent_model.name.underscore %>_<%= field_for(parent_model) %>
+    <%= parent_model.name.underscore %>.<%= field_for(parent_model) %> if <%= parent_model.name.underscore %>
   end
 <% end -%>
 end

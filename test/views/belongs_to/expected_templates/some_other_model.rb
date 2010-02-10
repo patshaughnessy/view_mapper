@@ -4,7 +4,7 @@ class SomeOtherModel < ActiveRecord::Base
   def parent_name
     parent.name if parent
   end
-  def second_parent_name
-    second_parent.name if second_parent
+  def second_parent_other_field
+    second_parent.other_field if second_parent
   end
 end
