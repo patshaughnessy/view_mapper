@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Shaughnessy"]
-  s.date = %q{2010-02-10}
+  s.date = %q{2010-02-11}
   s.description = %q{View_mapper will generate scaffolding for new or existing models, customized for the plugins you use in your app.}
   s.email = %q{pat@patshaughnessy.net}
   s.extra_rdoc_files = [
@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
      "lib/view_mapper/views/auto_complete/templates/view_new.html.erb",
      "lib/view_mapper/views/belongs_to/belongs_to_view.rb",
      "lib/view_mapper/views/belongs_to/templates/migration.rb",
-     "lib/view_mapper/views/belongs_to/templates/model.rb",
+     "lib/view_mapper/views/belongs_to/templates/model.erb",
      "lib/view_mapper/views/belongs_to/templates/view_edit.html.erb",
      "lib/view_mapper/views/belongs_to/templates/view_form.html.erb",
      "lib/view_mapper/views/belongs_to/templates/view_index.html.erb",
@@ -51,7 +51,7 @@ Gem::Specification.new do |s|
      "lib/view_mapper/views/belongs_to_auto_complete/templates/controller.rb",
      "lib/view_mapper/views/belongs_to_auto_complete/templates/layout.html.erb",
      "lib/view_mapper/views/belongs_to_auto_complete/templates/migration.rb",
-     "lib/view_mapper/views/belongs_to_auto_complete/templates/model.rb",
+     "lib/view_mapper/views/belongs_to_auto_complete/templates/model.erb",
      "lib/view_mapper/views/belongs_to_auto_complete/templates/view_edit.html.erb",
      "lib/view_mapper/views/belongs_to_auto_complete/templates/view_form.html.erb",
      "lib/view_mapper/views/belongs_to_auto_complete/templates/view_index.html.erb",

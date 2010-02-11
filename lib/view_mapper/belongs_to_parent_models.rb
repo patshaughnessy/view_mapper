@@ -17,7 +17,7 @@ module ViewMapper
 
     def add_model_actions(m)
       m.directory(File.join('test/fixtures', class_path))
-      m.template   'model.rb',     File.join('app/models', class_path, "#{file_name}.rb")
+      m.template   'model.erb',     File.join('app/models', class_path, "#{file_name}.rb")
       m.template   'unit_test.rb', File.join('test/unit', class_path, "#{file_name}_test.rb")
       unless options[:skip_fixture]
         m.template 'fixtures.yml', File.join('test/fixtures', "#{table_name}.yml")

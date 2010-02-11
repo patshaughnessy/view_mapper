@@ -277,7 +277,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       @parent_models = @gen.parent_models
       @class_name = @gen.class_name
       @attributes = @gen.attributes
-      template_file = File.open(@gen.source_path("model.rb"))
+      template_file = File.open(@gen.source_path("model.erb"))
       result = ERB.new(template_file.read, nil, '-').result(binding)
       expected_file = File.open(File.join(File.dirname(__FILE__), "expected_templates/some_other_model.rb"))
       assert_equal expected_file.read, result
@@ -418,9 +418,9 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
         'functional_test.rb'   => 'test/functional/some_other_models_controller_test.rb',
         'helper.rb'            => 'app/helpers/some_other_models_helper.rb',
         'helper_test.rb'       => 'test/unit/helpers/some_other_models_helper_test.rb',
-        'model.rb'            => 'app/models/some_other_model.rb',
-        'unit_test.rb'        => 'test/unit/some_other_model_test.rb',
-        'fixtures.yml'        => 'test/fixtures/some_other_models.yml'
+        'model.erb'            => 'app/models/some_other_model.rb',
+        'unit_test.rb'         => 'test/unit/some_other_model_test.rb',
+        'fixtures.yml'         => 'test/fixtures/some_other_models.yml'
       }.each { |template, target| Rails::Generator::Commands::Create.any_instance.expects(:template).with(template, target) }
 
       Rails::Generator::Commands::Create.any_instance.expects(:route_resources).with('some_other_models')
