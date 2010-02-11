@@ -52,7 +52,8 @@ module ViewMapper
     end
 
     def auto_complete_installed
-      ActionController::Base.methods.include? 'auto_complete_for'
+      ActionController::Base.methods.include?('auto_complete_for') ||
+      ActionController::Base.methods.include?(:auto_complete_for)
     end
 
   end

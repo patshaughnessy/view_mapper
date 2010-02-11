@@ -24,7 +24,7 @@ module ViewMapper
     end
 
     def has_method?(method_name)
-      model.new.methods.include?(method_name)
+      model.new.methods.include?(method_name) || model.new.methods.include?(method_name.to_sym)
     end
 
     def attributes
@@ -68,7 +68,7 @@ module ViewMapper
     end
 
     def accepts_nested_attributes_for?(child_model)
-      if !model.new.methods.include? "#{child_model.name.underscore.pluralize}_attributes="
+      if !has_method?("#{child_model.name.underscore.pluralize}_attributes=")
         @error = "Model #{model} does not accept nested attributes for model #{child_model.name}."
         false
       else
@@ -90,10 +90,6 @@ module ViewMapper
 
     def has_foreign_key_for?(parent_model_name)
       model.columns.detect { |col| is_foreign_key_for?(col, parent_model_name) }
-    end
-
-    def has_a_method?(method_name)
-      model.new.methods.include? method_name
     end
 
     private

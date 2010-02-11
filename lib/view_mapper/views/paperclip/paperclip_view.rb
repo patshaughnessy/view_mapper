@@ -87,7 +87,8 @@ module ViewMapper
     end
 
     def paperclip_installed
-      ActiveRecord::Base.methods.include? 'has_attached_file'
+      ActiveRecord::Base.methods.include?('has_attached_file') ||
+      ActiveRecord::Base.methods.include?(:has_attached_file)
     end
 
   end

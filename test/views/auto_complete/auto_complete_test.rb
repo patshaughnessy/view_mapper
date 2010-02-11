@@ -122,7 +122,7 @@ class AutoCompleteViewTest < Test::Unit::TestCase
         test_routes_file = expected_path + '/routes.rb'
         ViewForGenerator.any_instance.stubs(:destination_path).returns test_routes_file
         ScaffoldForViewGenerator.any_instance.stubs(:destination_path).returns test_routes_file
-        File.copy(standard_routes_file, test_routes_file)
+        FileUtils.copy(standard_routes_file, test_routes_file)
         Rails::Generator::Commands::Create.any_instance.stubs(:route_file).returns(test_routes_file)
         @generator_script.run(generator_script_cmd_line(gen, ['--view', 'auto_complete:address']))
         assert_equal File.open(expected_routes_file).read, File.open(test_routes_file).read

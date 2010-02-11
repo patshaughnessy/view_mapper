@@ -318,7 +318,7 @@ class BelongsToAutoCompleteViewTest < Test::Unit::TestCase
       expected_routes_file = expected_path + '/expected_routes.rb'
       test_routes_file = expected_path + '/routes.rb'
       ViewForGenerator.any_instance.stubs(:destination_path).returns test_routes_file
-      File.copy(standard_routes_file, test_routes_file)
+      FileUtils.copy(standard_routes_file, test_routes_file)
       Rails::Generator::Commands::Create.any_instance.stubs(:route_file).returns(test_routes_file)
       @generator_script.run(generator_script_cmd_line('view_for', ['--view', 'belongs_to_auto_complete:parent,second_parent[other_field]'], 'some_other_model'))
       assert_equal File.open(expected_routes_file).read, File.open(test_routes_file).read
