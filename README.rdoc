@@ -45,7 +45,7 @@ This is the same as view_for, but will also generate a new model at the same tim
 
 {belongs_to}[http://patshaughnessy.net/2010/1/25/creating-associations-to-existing-data-part-1-belongs_to-scaffolding]: Generates scaffolding that allows you to select an existing, associated model.
 
-belongs_to_auto_complete: Generates scaffolding that allows you to select an existing, associated model using auto_complete.
+{belongs_to_auto_complete}[http://patshaughnessy.net/2010/2/13/creating-associations-to-existing-data-part-2-belongs_to-with-auto_complete]: Generates scaffolding that allows you to select an existing, associated model using auto_complete.
 
 == Examples
 
