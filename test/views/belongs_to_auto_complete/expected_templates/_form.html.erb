@@ -4,10 +4,10 @@
   <%= f.text_field :name %>
 </p>
 <p>
-  Parent:<br />
-  <%= text_field_with_auto_complete :some_other_model, :parent_name, {}, { :method => :get, :url => '/auto_complete_for_parent_name', :param_name => 'parent[name]' } %>
+  Parent Model:<br />
+  <%= text_field_with_auto_complete :child_model, :parent_model_name, {}, { :method => :get, :url => '/auto_complete_for_parent_model_name', :param_name => 'parent_model[name]' } %>
 </p>
 <p>
-  Second Parent:<br />
-  <%= text_field_with_auto_complete :some_other_model, :second_parent_other_field, {}, { :method => :get, :url => '/auto_complete_for_second_parent_other_field', :param_name => 'second_parent[other_field]' } %>
+  Second Parent Model:<br />
+  <%= text_field_with_auto_complete :child_model, :second_parent_model_other_field, {}, { :method => :get, :url => '/auto_complete_for_second_parent_model_other_field', :param_name => 'second_parent_model[other_field]' } %>
 </p>

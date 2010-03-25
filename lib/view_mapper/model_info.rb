@@ -161,7 +161,7 @@ module ViewMapper
     def has_column_for_attachment(attachment, paperclip_col)
       has_column = model.columns.map {|col| col.name}.include?(paperclip_col)
       if !has_column
-        @error = "Column \'#{paperclip_col}\' does not exist. First run script/generate paperclip #{name.downcase} #{attachment}."
+        @error = "Column \'#{paperclip_col}\' does not exist. First run script/generate paperclip #{name.underscore} #{attachment}."
       end
       has_column
     end

@@ -3,6 +3,7 @@ require 'test/unit'
 require 'shoulda'
 require 'mocha'
 require 'active_record'
+require 'class_factory'
 
 ActiveRecord::Base.establish_connection({ :adapter => 'sqlite3', :database => ':memory:' })
 
@@ -21,123 +22,59 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'view_mapper'
 require 'views/fake/fake_view'
 
-def setup_test_table(paperclip_columns = false)
-  ActiveRecord::Base.connection.create_table :testies, :force => true do |table|
-    table.column :first_name, :string
-    table.column :last_name,  :string
-    table.column :address,    :string
-    table.column :some_flag,  :boolean
-    if paperclip_columns
-      table.column :avatar_file_name,     :string
-      table.column :avatar_content_type,  :string
-      table.column :avatar_file_size,     :integer
-      table.column :avatar_updated_at,    :datetime
-      table.column :avatar2_file_name,    :string
-      table.column :avatar2_content_type, :string
-      table.column :avatar2_file_size,    :integer
-      table.column :avatar2_updated_at,   :datetime
-    end
-  end
+ClassFactory.define :test_model do |t|
+  t.string  :first_name
+  t.string  :last_name
+  t.string  :address
+  t.boolean :some_flag
 end
 
-def setup_test_model(paperclip_columns = false)
-  setup_test_table(paperclip_columns)
-  Object.send(:remove_const, "Testy") rescue nil
-  Object.const_set("Testy", Class.new(ActiveRecord::Base))
-  Testy.class_eval do
-    def self.attachment_definitions
-      { :avatar => {:validations => []}, :avatar2 => {:validations => []} }
-    end
-  end
-  ActiveRecord::Base.send(:include, MockPaperclip)
-  ActionController::Base.send(:include, MockAutoComplete)
-  Object.const_get("Testy")
+ClassFactory.define :parent_model, :class_eval => 'has_many :child_models' do |parent|
+  parent.string :name
 end
 
-def setup_parent_test_model(create_foreign_key = true, child_belongs_to_parent = true, parent_has_many_children = true)
-  ActiveRecord::Base.connection.create_table :parents, :force => true do |table|
-    table.column :name, :string
-  end
-  ActiveRecord::Base.connection.create_table :some_other_models, :force => true do |table|
-    table.column :name,      :string
-    table.column :parent_id, :integer
-  end
-  ActiveRecord::Base.connection.add_column :testies, :parent_id, :integer unless !create_foreign_key
-  Object.send(:remove_const, "Parent") rescue nil
-  Object.const_set("Parent", Class.new(ActiveRecord::Base))
-  Object.send(:remove_const, "SomeOtherModel") rescue nil
-  Object.const_set("SomeOtherModel", Class.new(ActiveRecord::Base))
-  Parent.class_eval do
-    has_many :testies
-    has_many :some_other_models unless !parent_has_many_children
-    def testies_attributes=
-      'fake'
-    end
-    def some_other_models_attributes=
-      'fake'
-    end
-  end
-  Testy.class_eval do
-    belongs_to :parent unless !child_belongs_to_parent
-  end
-  SomeOtherModel.class_eval do
-    belongs_to :parent
-    def parent_name
-      'something'
-    end
-    def parent_name=
-    end
-  end
-  Object.const_get("Parent")
+ClassFactory.define :second_parent_model, :class_eval => 'has_many :child_models' do |parent|
+  parent.string :name
+  parent.string :other_field
 end
 
-def setup_second_parent_test_model(has_virtual_attribute_setter = true, has_virtual_attribute = true, has_foreign_key = true, parent_has_name_method = false, parent_has_name_column = true)
-  ActiveRecord::Base.connection.create_table :second_parents, :force => true do |table|
-    table.column :name, :string unless !parent_has_name_column
-    table.column :other_field, :string
+child_model_code = <<END
+  belongs_to :parent_model
+  def parent_model_name
+    'something'
   end
-  ActiveRecord::Base.connection.add_column :some_other_models, :second_parent_id, :integer unless !has_foreign_key
-  Object.send(:remove_const, "SecondParent") rescue nil
-  Object.const_set("SecondParent", Class.new(ActiveRecord::Base))
-  SecondParent.class_eval do
-    has_many :some_other_models
-    def some_other_models_attributes=
-      'fake'
-    end
-    def name
-      'fake'
-    end unless !parent_has_name_method
+  def parent_model_name=
   end
-  SomeOtherModel.class_eval do
-    belongs_to :second_parent
-    if has_virtual_attribute
-      def second_parent_name
-        'something'
-      end
-      def second_parent_other_field
-        'something'
-      end
-    end
-    if has_virtual_attribute_setter
-      def second_parent_name=
-        'something'
-      end
-      def second_parent_other_field=
-        'something'
-      end
-    end
+
+  belongs_to :second_parent_model
+  def second_parent_model_name
+    'something else'
   end
+  def second_parent_model_name=
+  end
+END
+
+ClassFactory.define :child_model, :class_eval => child_model_code do |child|
+  child.string  :name
+  child.integer :parent_model_id
+  child.integer :second_parent_model_id
 end
 
-def setup_test_model_without_nested_attributes
-  ActiveRecord::Base.connection.create_table :third_models, :force => true do |table|
-    table.column :name, :string
+second_child_model_code = <<END
+  belongs_to :parent_model
+  def parent_model_name
+    'something'
   end
-  Object.send(:remove_const, "ThirdModel") rescue nil
-  Object.const_set("ThirdModel", Class.new(ActiveRecord::Base))
-  Parent.class_eval do
-    has_many :third_model
+  def parent_model_name=
   end
+END
+
+ClassFactory.define :second_child_model, :class_eval => second_child_model_code do |child|
+  child.integer :parent_model_id
+  child.string  :first_name
+  child.string  :last_name
+  child.string  :address
+  child.boolean :some_flag
 end
 
 module MockPaperclip
@@ -179,11 +116,11 @@ def generator_cmd_line(gen, args, model)
   (cmd_line << args).flatten
 end
 
-def generator_script_cmd_line(gen, args, model = 'testy')
+def generator_script_cmd_line(gen, args, model = 'test_model')
   ([gen] << generator_cmd_line(gen, args, model)).flatten
 end
 
-def new_generator_for_test_model(gen, args, model = 'testy')
+def new_generator_for_test_model(gen, args, model = 'test_model')
   Rails::Generator::Base.instance(gen, generator_cmd_line(gen, args, model))
 end
 

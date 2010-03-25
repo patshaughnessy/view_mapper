@@ -1,10 +1,10 @@
-class Parent < ActiveRecord::Base
-  has_many :some_other_models
-  has_many :testies
-  accepts_nested_attributes_for :some_other_models,
+class ParentModel < ActiveRecord::Base
+  has_many :child_models
+  has_many :second_child_models
+  accepts_nested_attributes_for :child_models,
                                 :allow_destroy => true,
                                 :reject_if => proc { |attrs| attrs['name'].blank? }
-  accepts_nested_attributes_for :testies,
+  accepts_nested_attributes_for :second_child_models,
                                 :allow_destroy => true,
                                 :reject_if => proc { |attrs|
                                   attrs['first_name'].blank? &&

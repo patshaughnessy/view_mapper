@@ -1,4 +1,4 @@
-<h1>Listing testies</h1>
+<h1>Listing test_models</h1>
 
 <table>
   <tr>
@@ -8,19 +8,19 @@
     <th>Some flag</th>
   </tr>
 
-<% @testies.each do |testy| %>
+<% @test_models.each do |test_model| %>
   <tr>
-    <td><%=h testy.first_name %></td>
-    <td><%=h testy.last_name %></td>
-    <td><%=h testy.address %></td>
-    <td><%=h testy.some_flag %></td>
-    <td><%= link_to 'Show', testy %></td>
-    <td><%= link_to 'Edit', edit_testy_path(testy) %></td>
-    <td><%= link_to 'Destroy', testy, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%=h test_model.first_name %></td>
+    <td><%=h test_model.last_name %></td>
+    <td><%=h test_model.address %></td>
+    <td><%=h test_model.some_flag %></td>
+    <td><%= link_to 'Show', test_model %></td>
+    <td><%= link_to 'Edit', edit_test_model_path(test_model) %></td>
+    <td><%= link_to 'Destroy', test_model, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New testy', new_testy_path %>
+<%= link_to 'New test_model', new_test_model_path %>

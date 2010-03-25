@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
 class ViewForGeneratorTest < Test::Unit::TestCase
 
@@ -33,17 +33,17 @@ class ViewForGeneratorTest < Test::Unit::TestCase
       @generator_script.run(['view_for', 'blah'])
     end
 
-    context "run on a Testy model" do
+    context "run on a TestModel" do
       setup do
-        @model = setup_test_model
+        ClassFactory :test_model
       end
 
-      should "create a manifest = (scaffold for Testy) - (model template)" do
+      should "create a manifest = (scaffold for TestModel) - (model template)" do
 
         directories = [
           'app/controllers/',
           'app/helpers/',
-          'app/views/testies',
+          'app/views/test_models',
           'app/views/layouts/',
           'test/functional/',
           'test/unit/',
@@ -52,30 +52,30 @@ class ViewForGeneratorTest < Test::Unit::TestCase
         ].each { |path| Rails::Generator::Commands::Create.any_instance.expects(:directory).with(path) }
 
         templates = {
-          'view_index.html.erb' => 'app/views/testies/index.html.erb',
-          'view_show.html.erb'  => 'app/views/testies/show.html.erb',
-          'view_new.html.erb'   => 'app/views/testies/new.html.erb',
-          'view_edit.html.erb'  => 'app/views/testies/edit.html.erb',
-          'layout.html.erb'     => 'app/views/layouts/testies.html.erb',
+          'view_index.html.erb' => 'app/views/test_models/index.html.erb',
+          'view_show.html.erb'  => 'app/views/test_models/show.html.erb',
+          'view_new.html.erb'   => 'app/views/test_models/new.html.erb',
+          'view_edit.html.erb'  => 'app/views/test_models/edit.html.erb',
+          'layout.html.erb'     => 'app/views/layouts/test_models.html.erb',
           'style.css'           => 'public/stylesheets/scaffold.css',
-          'controller.rb'       => 'app/controllers/testies_controller.rb',
-          'functional_test.rb'  => 'test/functional/testies_controller_test.rb',
-          'helper.rb'           => 'app/helpers/testies_helper.rb',
-          'helper_test.rb'      => 'test/unit/helpers/testies_helper_test.rb'
+          'controller.rb'       => 'app/controllers/test_models_controller.rb',
+          'functional_test.rb'  => 'test/functional/test_models_controller_test.rb',
+          'helper.rb'           => 'app/helpers/test_models_helper.rb',
+          'helper_test.rb'      => 'test/unit/helpers/test_models_helper_test.rb'
         }.each { |template, target| Rails::Generator::Commands::Create.any_instance.expects(:template).with(template, target) }
 
-        Rails::Generator::Commands::Create.any_instance.expects(:route_resources).with('testies')
+        Rails::Generator::Commands::Create.any_instance.expects(:route_resources).with('test_models')
         Rails::Generator::Commands::Create.any_instance.expects(:file).never
 
-        @generator_script.run(['view_for', 'testy'])
+        @generator_script.run(['view_for', 'test_model'])
       end
     end
   end
 
   context "A view_for generator" do
     setup do
-      @view_for_gen = Rails::Generator::Base.instance('view_for', ['testy'] )
-      @model = setup_test_model
+      @view_for_gen = Rails::Generator::Base.instance('view_for', ['test_model'] )
+      @model = ClassFactory :test_model
     end
 
     should "have the proper model name" do

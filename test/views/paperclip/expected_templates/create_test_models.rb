@@ -1,6 +1,6 @@
-class CreateTesties < ActiveRecord::Migration
+class CreateTestModels < ActiveRecord::Migration
   def self.up
-    create_table :testies do |t|
+    create_table :test_models do |t|
       t.string :first_name
       t.string :last_name
       t.string :address
@@ -19,6 +19,6 @@ class CreateTesties < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :testies
+    drop_table :test_models
   end
 end

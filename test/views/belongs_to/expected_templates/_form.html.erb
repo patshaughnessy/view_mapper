@@ -4,10 +4,10 @@
   <%= f.text_field :name %>
 </p>
 <p>
-  Parent:<br />
-  <%= f.collection_select(:parent_id, Parent.all, :id, :name, { :prompt => true }) %>
+  Parent Model:<br />
+  <%= f.collection_select(:parent_model_id, ParentModel.all, :id, :name, { :prompt => true }) %>
 </p>
 <p>
-  Second Parent:<br />
-  <%= f.collection_select(:second_parent_id, SecondParent.all, :id, :other_field, { :prompt => true }) %>
+  Second Parent Model:<br />
+  <%= f.collection_select(:second_parent_model_id, SecondParentModel.all, :id, :other_field, { :prompt => true }) %>
 </p>

@@ -1,6 +1,6 @@
-<h1>Editing testy</h1>
+<h1>Editing test_model</h1>
 
-<% form_for(@testy, :html => { :multipart => true }) do |f| %>
+<% form_for(@test_model, :html => { :multipart => true }) do |f| %>
   <%= f.error_messages %>
   <p>
     <%= f.label :first_name %><br />
@@ -31,5 +31,5 @@
   </p>
 <% end %>
 
-<%= link_to 'Show', @testy %> |
-<%= link_to 'Back', testies_path %>
+<%= link_to 'Show', @test_model %> |
+<%= link_to 'Back', test_models_path %>

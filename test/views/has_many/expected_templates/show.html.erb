@@ -1,37 +1,37 @@
 <p>
   <b>Name:</b>
-  <%=h @parent.name %>
+  <%=h @parent_model.name %>
 </p>
 
-<% @parent.some_other_models.each do |some_other_model| %>
+<% @parent_model.child_models.each do |child_model| %>
   <div class="child">
     <p>
-      <b>SomeOtherModel Name:</b>
-      <%=h some_other_model.name %>
+      <b>ChildModel Name:</b>
+      <%=h child_model.name %>
     </p>
   </div>
 <% end %>
 
-<% @parent.testies.each do |testy| %>
+<% @parent_model.second_child_models.each do |second_child_model| %>
   <div class="child">
     <p>
-      <b>Testy First name:</b>
-      <%=h testy.first_name %>
+      <b>SecondChildModel First name:</b>
+      <%=h second_child_model.first_name %>
     </p>
     <p>
-      <b>Testy Last name:</b>
-      <%=h testy.last_name %>
+      <b>SecondChildModel Last name:</b>
+      <%=h second_child_model.last_name %>
     </p>
     <p>
-      <b>Testy Address:</b>
-      <%=h testy.address %>
+      <b>SecondChildModel Address:</b>
+      <%=h second_child_model.address %>
     </p>
     <p>
-      <b>Testy Some flag:</b>
-      <%=h testy.some_flag %>
+      <b>SecondChildModel Some flag:</b>
+      <%=h second_child_model.some_flag %>
     </p>
   </div>
 <% end %>
 
-<%= link_to 'Edit', edit_parent_path(@parent) %> |
-<%= link_to 'Back', parents_path %>
+<%= link_to 'Edit', edit_parent_model_path(@parent_model) %> |
+<%= link_to 'Back', parent_models_path %>

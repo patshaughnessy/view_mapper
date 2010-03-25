@@ -4,16 +4,16 @@ class ModelInfoTest < Test::Unit::TestCase
 
   context "A model info object created for a test model" do
     setup do
-      setup_test_model
-      @model_info = ViewMapper::ModelInfo.new('testy')
+      ClassFactory :test_model
+      @model_info = ViewMapper::ModelInfo.new('test_model')
     end
 
     should "find the model" do
-      assert_equal Testy, @model_info.model
+      assert_equal TestModel, @model_info.model
     end
 
     should "return the model's name" do
-      assert_equal 'Testy', @model_info.name
+      assert_equal 'TestModel', @model_info.name
     end
 
     should "return the model's columns and not the primary key or time stamp columns" do
@@ -42,10 +42,10 @@ class ModelInfoTest < Test::Unit::TestCase
 
   context "Child and parent model info objects" do
     setup do
-      setup_test_model
-      setup_parent_test_model
-      @child_model = ViewMapper::ModelInfo.new('testy')
-      @parent_model = ViewMapper::ModelInfo.new('parent')
+      ClassFactory :parent_model, :class_eval => 'has_many :second_child_models'
+      ClassFactory :second_child_model
+      @child_model = ViewMapper::ModelInfo.new('second_child_model')
+      @parent_model = ViewMapper::ModelInfo.new('parent_model')
     end
 
     should "not include the parent foreign key column in the child model's columns" do
@@ -53,34 +53,31 @@ class ModelInfoTest < Test::Unit::TestCase
     end
 
     should "determine that the child model belongs to the parent model" do
-      assert_equal true, @child_model.belongs_to?('parent')
+      assert_equal true, @child_model.belongs_to?('parent_model')
     end
 
     should "determine that the parent model has many child models" do
-      assert_equal true, @parent_model.has_many?('testies')
+      assert_equal true, @parent_model.has_many?('second_child_models')
     end
   end
 
   context "Two model info objects for models that in a habtm association" do
     setup do
-      setup_test_model
-      setup_parent_test_model
-      Testy.class_eval do
-        has_and_belongs_to_many :parents
-      end
-      @child_model = ViewMapper::ModelInfo.new('testy')
-      @parent_model = ViewMapper::ModelInfo.new('parent')
+      ClassFactory :parent_model
+      ClassFactory :child_model, :class_eval => 'has_and_belongs_to_many :parent_models'
+      @child_model = ViewMapper::ModelInfo.new('child_model')
+      @parent_model = ViewMapper::ModelInfo.new('parent_model')
     end
 
     should "determine that a habtm association exists" do
-      assert_equal true, @child_model.has_and_belongs_to_many?('parents')
+      assert_equal true, @child_model.has_and_belongs_to_many?('parent_models')
     end
   end
 
   context "A model info object created for a test model that has Paperclip attachments" do
     setup do
-      setup_test_model(true)
-      @model_info = ViewMapper::ModelInfo.new('testy')
+      ClassFactory :test_model
+      @model_info = ViewMapper::ModelInfo.new('test_model')
     end
 
     should "not include the Paperclip columns in the model's columns" do

@@ -1,14 +1,14 @@
-<h1>New testy</h1>
+<h1>New test_model</h1>
 
-<% form_for(@testy) do |f| %>
+<% form_for(@test_model) do |f| %>
   <%= f.error_messages %>
   <p>
     <%= f.label :first_name %><br />
-    <%= text_field_with_auto_complete :testy, :first_name, {}, { :method => :get } %>
+    <%= text_field_with_auto_complete :test_model, :first_name, {}, { :method => :get } %>
   </p>
   <p>
     <%= f.label :last_name %><br />
-    <%= text_field_with_auto_complete :testy, :last_name, {}, { :method => :get } %>
+    <%= text_field_with_auto_complete :test_model, :last_name, {}, { :method => :get } %>
   </p>
   <p>
     <%= f.label :address %><br />
@@ -23,4 +23,4 @@
   </p>
 <% end %>
 
-<%= link_to 'Back', testies_path %>
+<%= link_to 'Back', test_models_path %>

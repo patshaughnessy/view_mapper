@@ -5,22 +5,22 @@
   <%= f.text_field :name %>
 </p>
 
-<div id='some_other_model_children'>
-  <% f.fields_for :some_other_models do |some_other_model_form| %>
-    <%= render :partial => 'some_other_model', :locals => { :f => some_other_model_form } %>
+<div id='child_model_children'>
+  <% f.fields_for :child_models do |child_model_form| %>
+    <%= render :partial => 'child_model', :locals => { :f => child_model_form } %>
   <% end %>
 </div>
 
 <p>
-  <%= add_child_link 'Add a SomeOtherModel', 'some_other_model', f %>
+  <%= add_child_link 'Add a ChildModel', 'child_model', f %>
 </p>
 
-<div id='testy_children'>
-  <% f.fields_for :testies do |testy_form| %>
-    <%= render :partial => 'testy', :locals => { :f => testy_form } %>
+<div id='second_child_model_children'>
+  <% f.fields_for :second_child_models do |second_child_model_form| %>
+    <%= render :partial => 'second_child_model', :locals => { :f => second_child_model_form } %>
   <% end %>
 </div>
 
 <p>
-  <%= add_child_link 'Add a Testy', 'testy', f %>
+  <%= add_child_link 'Add a SecondChildModel', 'second_child_model', f %>
 </p>

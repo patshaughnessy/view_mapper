@@ -1,24 +1,24 @@
-<h1>Listing some_other_models</h1>
+<h1>Listing child_models</h1>
 
 <table>
   <tr>
     <th>Name</th>
-    <th>Parent</th>
-    <th>Second Parent</th>
+    <th>Parent Model</th>
+    <th>Second Parent Model</th>
   </tr>
 
-<% @some_other_models.each do |some_other_model| %>
+<% @child_models.each do |child_model| %>
   <tr>
-    <td><%=h some_other_model.name %></td>
-    <td><%=h some_other_model.parent_name %></td>
-    <td><%=h some_other_model.second_parent_other_field %></td>
-    <td><%= link_to 'Show', some_other_model %></td>
-    <td><%= link_to 'Edit', edit_some_other_model_path(some_other_model) %></td>
-    <td><%= link_to 'Destroy', some_other_model, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%=h child_model.name %></td>
+    <td><%=h child_model.parent_model_name %></td>
+    <td><%=h child_model.second_parent_model_other_field %></td>
+    <td><%= link_to 'Show', child_model %></td>
+    <td><%= link_to 'Edit', edit_child_model_path(child_model) %></td>
+    <td><%= link_to 'Destroy', child_model, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New some_other_model', new_some_other_model_path %>
+<%= link_to 'New child_model', new_child_model_path %>

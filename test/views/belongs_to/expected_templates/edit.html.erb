@@ -1,11 +1,11 @@
-<h1>Editing some_other_model</h1>
+<h1>Editing child_model</h1>
 
-<% form_for(@some_other_model) do |f| %>
+<% form_for(@child_model) do |f| %>
   <%= render :partial => 'form', :locals => { :f => f } %>
   <p>
     <%= f.submit 'Update' %>
   </p>
 <% end %>
 
-<%= link_to 'Show', @some_other_model %> |
-<%= link_to 'Back', some_other_models_path %>
+<%= link_to 'Show', @child_model %> |
+<%= link_to 'Back', child_models_path %>

@@ -1,6 +1,6 @@
-class CreateParents < ActiveRecord::Migration
+class CreateParentModels < ActiveRecord::Migration
   def self.up
-    create_table :parents do |t|
+    create_table :parent_models do |t|
       t.string :first_name
       t.string :last_name
       t.string :address
@@ -11,6 +11,6 @@ class CreateParents < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :parents
+    drop_table :parent_models
   end
 end
