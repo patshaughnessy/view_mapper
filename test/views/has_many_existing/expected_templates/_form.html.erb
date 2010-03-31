@@ -1,0 +1,16 @@
+<%= f.error_messages %>
+
+<p>
+  <%= f.label :name %><br />
+  <%= f.text_field :name %>
+</p>
+
+<div id='assignment_children'>
+  <% f.fields_for :assignments do |assignment_form| %>
+    <%= render :partial => 'assignment', :locals => { :f => assignment_form } %>
+  <% end %>
+</div>
+
+<p>
+  <%= add_child_link 'Add Assignment', 'assignment', f %>
+</p>

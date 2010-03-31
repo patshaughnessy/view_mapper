@@ -77,6 +77,39 @@ ClassFactory.define :second_child_model, :class_eval => second_child_model_code 
   child.boolean :some_flag
 end
 
+has_many_through_code = <<SRC
+has_many :programmers, :through => :assignments
+has_many :assignments
+SRC
+ClassFactory.define :project, :class_eval => has_many_through_code do |t|
+  t.string :name
+end
+
+has_many_through_code = <<SRC
+has_many :projects, :through => :assignments
+has_many :assignments
+def assignments_attributes=
+  'fake'
+end
+SRC
+ClassFactory.define :programmer, :class_eval => has_many_through_code do |t|
+  t.string :name
+end
+
+through_model_code = <<SRC
+belongs_to :project
+belongs_to :programmer
+def project_name
+  'something'
+end
+def project_name=
+end
+SRC
+ClassFactory.define :assignment, :class_eval => through_model_code do |a|
+  a.integer :project_id
+  a.integer :programmer_id
+end
+
 module MockPaperclip
   class << self
     def included(base)

@@ -1,0 +1,26 @@
+<% for attribute in attributes -%>
+<p>
+  <b><%= attribute.column.human_name %>:</b>
+  <%%=h @<%= singular_name %>.<%= attribute.name %> %>
+</p>
+
+<% end -%>
+<% has_many_through_models.each do |hmt_model| -%>
+<%% @<%= singular_name %>.<%= hmt_model.through_model.name.underscore.pluralize %>.each do |<%= hmt_model.through_model.name.underscore %>| %>
+  <div class="child">
+<% for attribute in hmt_model.through_model.attributes -%>
+    <p>
+      <b><%= hmt_model.through_model.name %> <%= attribute.column.human_name %>:</b>
+      <%%=h <%= hmt_model.through_model.name.underscore%>.<%= attribute.name %> %>
+    </p>
+<% end -%>
+    <p>
+      <b><%= hmt_model.name %>:</b>
+      <%%=h <%= hmt_model.through_model.name.underscore%>.<%= hmt_model.name.underscore%>_<%= field_for(hmt_model) %> %>
+    </p>
+  </div>
+<%% end %>
+
+<% end -%>
+<%%= link_to 'Edit', edit_<%= singular_name %>_path(@<%= singular_name %>) %> |
+<%%= link_to 'Back', <%= plural_name %>_path %>

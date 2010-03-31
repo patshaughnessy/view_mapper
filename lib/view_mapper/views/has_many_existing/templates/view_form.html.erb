@@ -1,0 +1,20 @@
+<%%= f.error_messages %>
+<% for attribute in attributes -%>
+
+<p>
+  <%%= f.label :<%= attribute.name %> %><br />
+  <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+</p>
+<% end -%>
+<% has_many_through_models.each do |hmt_model| -%>
+
+<div id='<%= hmt_model.through_model.name.underscore %>_children'>
+  <%% f.fields_for :<%= hmt_model.through_model.name.underscore.pluralize %> do |<%= hmt_model.through_model.name.underscore %>_form| %>
+    <%%= render :partial => '<%= hmt_model.through_model.name.underscore %>', :locals => { :f => <%= hmt_model.through_model.name.underscore %>_form } %>
+  <%% end %>
+</div>
+
+<p>
+  <%%= add_child_link 'Add <%= hmt_model.through_model.name %>', '<%= hmt_model.through_model.name.underscore %>', f %>
+</p>
+<% end -%>

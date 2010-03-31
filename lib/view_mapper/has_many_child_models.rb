@@ -82,26 +82,26 @@ module ViewMapper
         end
         return false
       end
-      cms.reject! { |child_model| !validate_child_model(child_model) }
+      cms.reject! { |child_model| !validate_child_model(child_model, class_name, view_only? ? model : nil) }
       @child_models = cms
       !cms.empty?
     end
 
-    def validate_child_model(child_model)
+    def validate_child_model(child_model, parent_model_name, parent_model)
       if !child_model.valid?
         logger.error child_model.error
         return false
-      elsif view_only? && !model.accepts_nested_attributes_for?(child_model)
-        logger.warning "Model #{model.name} does not accept nested attributes for model #{child_model.name}."
+      elsif parent_model && !parent_model.accepts_nested_attributes_for?(child_model)
+        logger.warning "Model #{parent_model.name} does not accept nested attributes for model #{child_model.name}."
         return false
       else
-        if child_model.has_many?(class_name.pluralize) || child_model.has_and_belongs_to_many?(class_name.pluralize)
+        if child_model.has_many?(parent_model_name.pluralize) || child_model.has_and_belongs_to_many?(parent_model_name.pluralize)
           true
-        elsif !child_model.belongs_to?(class_name)
-          logger.warning "Model #{child_model.name} does not contain a belongs_to association for #{class_name}."
+        elsif !child_model.belongs_to?(parent_model_name)
+          logger.warning "Model #{child_model.name} does not contain a belongs_to association for #{parent_model_name}."
           return false
-        elsif !child_model.has_foreign_key_for?(class_name)
-          logger.warning "Model #{child_model.name} does not contain a foreign key for #{class_name}."
+        elsif !child_model.has_foreign_key_for?(parent_model_name)
+          logger.warning "Model #{child_model.name} does not contain a foreign key for #{parent_model_name}."
           return false
         end
       end

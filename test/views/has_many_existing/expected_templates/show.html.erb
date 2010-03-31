@@ -1,0 +1,20 @@
+<p>
+  <b>Name:</b>
+  <%=h @programmer.name %>
+</p>
+
+<% @programmer.assignments.each do |assignment| %>
+  <div class="child">
+    <p>
+      <b>Assignment Name:</b>
+      <%=h assignment.name %>
+    </p>
+    <p>
+      <b>Project:</b>
+      <%=h assignment.project_name %>
+    </p>
+  </div>
+<% end %>
+
+<%= link_to 'Edit', edit_programmer_path(@programmer) %> |
+<%= link_to 'Back', programmers_path %>

@@ -1,0 +1,16 @@
+<div class="child">
+<% for attribute in hmt_model.through_model.attributes -%>
+  <p>
+    <%= hmt_model.through_model.name %> <%%= f.label :<%= attribute.name %> %><br />
+    <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+  </p>
+<% end -%>
+  <p>
+    <%= hmt_model.name.titleize %>:<br />
+    <%%= f.collection_select(:<%= hmt_model.name.underscore %>_id, <%= hmt_model.name %>.all, :id, :<%= field_for(hmt_model) %>, { :prompt => true }) %>
+  </p>
+  <p>
+    <%%= f.hidden_field :_destroy, :class => 'delete' %>
+    <%%= remove_child_link 'remove', f %>
+  </p>
+</div>

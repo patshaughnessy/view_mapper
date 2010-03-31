@@ -12,8 +12,15 @@ module ViewMapper
     end
 
     def manifest
-      m = super
+      m = super.edit do |action|
+        action unless is_model_dependency_action(action) || !valid
+      end
       if valid
+        m.template(
+          "view_form.html.erb",
+          File.join('app/views', controller_class_path, controller_file_name, "_form.html.erb")
+        )
+        add_model_actions(m) unless view_only?
         parent_models.reverse.each do |parent_model|
           m.route :name       => 'connect',
                   :path       => auto_complete_for_method(parent_model),
@@ -34,7 +41,7 @@ module ViewMapper
       @valid &&= validate_parent_models
     end
 
-    def validate_parent_model(parent_model)
+    def validate_parent_model(parent_model, child_model_name, child_model, check_setter_method = true)
       valid = super
       if valid && !parent_model.has_column?(field_for(parent_model))
         logger.warning "Model #{parent_model.name} does not have a #{field_for(parent_model)} column."

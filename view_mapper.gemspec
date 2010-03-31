@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{view_mapper}
-  s.version = "0.3.3"
+  s.version = "0.3.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Shaughnessy"]
-  s.date = %q{2010-02-11}
+  s.date = %q{2010-04-04}
   s.description = %q{View_mapper will generate scaffolding for new or existing models, customized for the plugins you use in your app.}
   s.email = %q{pat@patshaughnessy.net}
   s.extra_rdoc_files = [
@@ -68,6 +68,11 @@ Gem::Specification.new do |s|
      "lib/view_mapper/views/has_many/templates/view_form.html.erb",
      "lib/view_mapper/views/has_many/templates/view_new.html.erb",
      "lib/view_mapper/views/has_many/templates/view_show.html.erb",
+     "lib/view_mapper/views/has_many_existing/has_many_existing_view.rb",
+     "lib/view_mapper/views/has_many_existing/templates/model.rb",
+     "lib/view_mapper/views/has_many_existing/templates/view_child_form.html.erb",
+     "lib/view_mapper/views/has_many_existing/templates/view_form.html.erb",
+     "lib/view_mapper/views/has_many_existing/templates/view_show.html.erb",
      "lib/view_mapper/views/paperclip/paperclip_view.rb",
      "lib/view_mapper/views/paperclip/templates/migration.rb",
      "lib/view_mapper/views/paperclip/templates/model.rb",
@@ -85,59 +90,67 @@ Gem::Specification.new do |s|
      "test/test_helper.rb",
      "test/view_mapper_test.rb",
      "test/views/auto_complete/auto_complete_test.rb",
-     "test/views/auto_complete/expected_templates/actual_index",
      "test/views/auto_complete/expected_templates/edit.html.erb",
      "test/views/auto_complete/expected_templates/expected_routes.rb",
      "test/views/auto_complete/expected_templates/index.html.erb",
      "test/views/auto_complete/expected_templates/new.html.erb",
      "test/views/auto_complete/expected_templates/show.html.erb",
      "test/views/auto_complete/expected_templates/standard_routes.rb",
-     "test/views/auto_complete/expected_templates/testies.html.erb",
-     "test/views/auto_complete/expected_templates/testies_controller.rb",
+     "test/views/auto_complete/expected_templates/test_models.html.erb",
+     "test/views/auto_complete/expected_templates/test_models_controller.rb",
      "test/views/belongs_to/belongs_to_test.rb",
      "test/views/belongs_to/expected_templates/_form.html.erb",
-     "test/views/belongs_to/expected_templates/create_some_other_models.rb",
+     "test/views/belongs_to/expected_templates/child_model.rb",
+     "test/views/belongs_to/expected_templates/create_child_models.rb",
      "test/views/belongs_to/expected_templates/edit.html.erb",
      "test/views/belongs_to/expected_templates/index.html.erb",
      "test/views/belongs_to/expected_templates/new.html.erb",
      "test/views/belongs_to/expected_templates/show.html.erb",
-     "test/views/belongs_to/expected_templates/some_other_model.rb",
      "test/views/belongs_to_auto_complete/belongs_to_auto_complete_test.rb",
      "test/views/belongs_to_auto_complete/expected_templates/_form.html.erb",
-     "test/views/belongs_to_auto_complete/expected_templates/create_some_other_models.rb",
+     "test/views/belongs_to_auto_complete/expected_templates/child_model.rb",
+     "test/views/belongs_to_auto_complete/expected_templates/child_models.html.erb",
+     "test/views/belongs_to_auto_complete/expected_templates/child_models_controller.rb",
+     "test/views/belongs_to_auto_complete/expected_templates/create_child_models.rb",
      "test/views/belongs_to_auto_complete/expected_templates/edit.html.erb",
      "test/views/belongs_to_auto_complete/expected_templates/expected_routes.rb",
      "test/views/belongs_to_auto_complete/expected_templates/index.html.erb",
      "test/views/belongs_to_auto_complete/expected_templates/new.html.erb",
      "test/views/belongs_to_auto_complete/expected_templates/show.html.erb",
-     "test/views/belongs_to_auto_complete/expected_templates/some_other_model.rb",
-     "test/views/belongs_to_auto_complete/expected_templates/some_other_models.html.erb",
-     "test/views/belongs_to_auto_complete/expected_templates/some_other_models_controller.rb",
      "test/views/belongs_to_auto_complete/expected_templates/standard_routes.rb",
      "test/views/fake/fake_view.rb",
      "test/views/fake/templates/fake_template1.html.erb",
      "test/views/has_many/expected_templates/_form.html.erb",
-     "test/views/has_many/expected_templates/_person.html.erb",
-     "test/views/has_many/expected_templates/create_parents.rb",
+     "test/views/has_many/expected_templates/_second_child_model.html.erb",
+     "test/views/has_many/expected_templates/create_parent_models.rb",
      "test/views/has_many/expected_templates/edit.html.erb",
      "test/views/has_many/expected_templates/index.html.erb",
      "test/views/has_many/expected_templates/new.html.erb",
-     "test/views/has_many/expected_templates/parent.rb",
+     "test/views/has_many/expected_templates/parent_model.rb",
      "test/views/has_many/expected_templates/show.html.erb",
      "test/views/has_many/has_many_view_test.rb",
-     "test/views/paperclip/expected_templates/create_testies.rb",
+     "test/views/has_many_existing/expected_templates/_assignment.html.erb",
+     "test/views/has_many_existing/expected_templates/_form.html.erb",
+     "test/views/has_many_existing/expected_templates/create_programmers.rb",
+     "test/views/has_many_existing/expected_templates/edit.html.erb",
+     "test/views/has_many_existing/expected_templates/index.html.erb",
+     "test/views/has_many_existing/expected_templates/new.html.erb",
+     "test/views/has_many_existing/expected_templates/programmer.rb",
+     "test/views/has_many_existing/expected_templates/show.html.erb",
+     "test/views/has_many_existing/has_many_existing_test.rb",
+     "test/views/paperclip/expected_templates/create_test_models.rb",
      "test/views/paperclip/expected_templates/edit.html.erb",
      "test/views/paperclip/expected_templates/index.html.erb",
      "test/views/paperclip/expected_templates/new.html.erb",
      "test/views/paperclip/expected_templates/show.html.erb",
-     "test/views/paperclip/expected_templates/testy.rb",
+     "test/views/paperclip/expected_templates/test_model.rb",
      "test/views/paperclip/paperclip_view_test.rb",
      "view_mapper.gemspec"
   ]
   s.homepage = %q{http://patshaughnessy.net/view_mapper}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Scaffolding for your models and plugins}
   s.test_files = [
     "test/editable_manifest_test.rb",
@@ -151,22 +164,25 @@ Gem::Specification.new do |s|
      "test/views/auto_complete/auto_complete_test.rb",
      "test/views/auto_complete/expected_templates/expected_routes.rb",
      "test/views/auto_complete/expected_templates/standard_routes.rb",
-     "test/views/auto_complete/expected_templates/testies_controller.rb",
+     "test/views/auto_complete/expected_templates/test_models_controller.rb",
      "test/views/belongs_to/belongs_to_test.rb",
-     "test/views/belongs_to/expected_templates/create_some_other_models.rb",
-     "test/views/belongs_to/expected_templates/some_other_model.rb",
+     "test/views/belongs_to/expected_templates/child_model.rb",
+     "test/views/belongs_to/expected_templates/create_child_models.rb",
      "test/views/belongs_to_auto_complete/belongs_to_auto_complete_test.rb",
-     "test/views/belongs_to_auto_complete/expected_templates/create_some_other_models.rb",
+     "test/views/belongs_to_auto_complete/expected_templates/child_model.rb",
+     "test/views/belongs_to_auto_complete/expected_templates/child_models_controller.rb",
+     "test/views/belongs_to_auto_complete/expected_templates/create_child_models.rb",
      "test/views/belongs_to_auto_complete/expected_templates/expected_routes.rb",
-     "test/views/belongs_to_auto_complete/expected_templates/some_other_model.rb",
-     "test/views/belongs_to_auto_complete/expected_templates/some_other_models_controller.rb",
      "test/views/belongs_to_auto_complete/expected_templates/standard_routes.rb",
      "test/views/fake/fake_view.rb",
-     "test/views/has_many/expected_templates/create_parents.rb",
-     "test/views/has_many/expected_templates/parent.rb",
+     "test/views/has_many/expected_templates/create_parent_models.rb",
+     "test/views/has_many/expected_templates/parent_model.rb",
      "test/views/has_many/has_many_view_test.rb",
-     "test/views/paperclip/expected_templates/create_testies.rb",
-     "test/views/paperclip/expected_templates/testy.rb",
+     "test/views/has_many_existing/expected_templates/create_programmers.rb",
+     "test/views/has_many_existing/expected_templates/programmer.rb",
+     "test/views/has_many_existing/has_many_existing_test.rb",
+     "test/views/paperclip/expected_templates/create_test_models.rb",
+     "test/views/paperclip/expected_templates/test_model.rb",
      "test/views/paperclip/paperclip_view_test.rb"
   ]
 

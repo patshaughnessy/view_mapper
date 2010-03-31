@@ -1,0 +1,14 @@
+<div class="child">
+  <p>
+    Assignment <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    Project:<br />
+    <%= f.collection_select(:project_id, Project.all, :id, :name, { :prompt => true }) %>
+  </p>
+  <p>
+    <%= f.hidden_field :_destroy, :class => 'delete' %>
+    <%= remove_child_link 'remove', f %>
+  </p>
+</div>

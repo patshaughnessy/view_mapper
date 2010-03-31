@@ -47,6 +47,8 @@ This is the same as view_for, but will also generate a new model at the same tim
 
 {belongs_to_auto_complete}[http://patshaughnessy.net/2010/2/13/creating-associations-to-existing-data-part-2-belongs_to-with-auto_complete]: Generates scaffolding that allows you to select an existing, associated model using auto_complete.
 
+{has_many_existing}[http://patshaughnessy.net/2010/4/4/creating-associations-to-existing-data-part-3-has_many-through-scaffolding]: Generates scaffolding for a complex form to edit two models that have a has_many, :through association with a third model. Use this if you have a many-many relationship with existing data.
+
 == Examples
 
 For detailed examples and more information see: http://patshaughnessy.net/view_mapper

@@ -1,20 +1,6 @@
 module ViewMapper
   module BelongsToParentModels
 
-    def manifest
-      m = super.edit do |action|
-        action unless is_model_dependency_action(action) || !valid
-      end
-      if valid
-        m.template(
-          "view_form.html.erb",
-          File.join('app/views', controller_class_path, controller_file_name, "_form.html.erb")
-        )
-        add_model_actions(m) unless view_only?
-      end
-      m
-    end
-
     def add_model_actions(m)
       m.directory(File.join('test/fixtures', class_path))
       m.template   'model.erb',     File.join('app/models', class_path, "#{file_name}.rb")
@@ -70,30 +56,30 @@ module ViewMapper
         end
         return false
       end
-      parents.reject! { |parent_model| !validate_parent_model(parent_model) }
+      parents.reject! { |parent_model| !validate_parent_model(parent_model, class_name, view_only? ? model : nil) }
       @parent_models = parents
       !parents.empty?
     end
 
-    def validate_parent_model(parent_model)
+    def validate_parent_model(parent_model, child_model_name, child_model, check_setter_method = false)
       parent_model_name = parent_model.name
       if !parent_model.valid?
         logger.error parent_model.error
         return false
-      elsif view_only? && !model.belongs_to?(parent_model_name)
-        logger.warning "Model #{model.name} does not belong to model #{parent_model_name}."
+      elsif child_model && !child_model.belongs_to?(parent_model_name)
+        logger.warning "Model #{child_model.name} does not belong to model #{parent_model_name}."
         return false
-      elsif view_only? && !model.has_method?(virtual_attribute_for(parent_model))
-        logger.warning "Model #{model.name} does not have a method #{virtual_attribute_for(parent_model)}."
+      elsif child_model && !child_model.has_method?(virtual_attribute_for(parent_model))
+        logger.warning "Model #{child_model.name} does not have a method #{virtual_attribute_for(parent_model)}."
         return false
-      elsif view_only? && !model.has_method?(virtual_attribute_setter_for(parent_model))
-        logger.warning "Model #{model.name} does not have a method #{virtual_attribute_setter_for(parent_model)}."
+      elsif child_model && check_setter_method && !child_model.has_method?(virtual_attribute_setter_for(parent_model))
+        logger.warning "Model #{child_model.name} does not have a method #{virtual_attribute_setter_for(parent_model)}."
         return false
-      elsif view_only? && !model.has_foreign_key_for?(parent_model_name)
-        logger.warning "Model #{class_name} does not contain a foreign key for #{parent_model_name}."
+      elsif child_model && !child_model.has_foreign_key_for?(parent_model_name)
+        logger.warning "Model #{child_model.name} does not contain a foreign key for #{parent_model_name}."
         return false
-      elsif !parent_model.has_many?(class_name.pluralize)
-        logger.warning "Model #{parent_model_name} does not contain a has_many association for #{class_name}."
+      elsif !parent_model.has_many?(child_model_name.pluralize)
+        logger.warning "Model #{parent_model_name} does not contain a has_many association for #{child_model_name}."
         return false
       elsif !parent_model.has_method?(field_for(parent_model)) && !parent_model.has_column?(field_for(parent_model))
         logger.warning "Model #{parent_model_name} does not have a #{field_for(parent_model)} attribute."

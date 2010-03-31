@@ -1,10 +1,10 @@
 module ViewMapper
   class ModelInfo
 
-    attr_reader :model
-    attr_reader :name
-    attr_reader :attributes
-    attr_reader :error
+    attr_reader   :model
+    attr_accessor :through_model # has_many :through => XYZ
+    attr_reader   :name
+    attr_reader   :error
 
     def initialize(model_name)
       @model = find_model(model_name)
@@ -52,18 +52,47 @@ module ViewMapper
     end
 
     def child_models
-      model_info_array_for_association(:has_many)
+      @child_models ||= model_info_array_for_association(:has_many)
     end
 
     def parent_models
-      model_info_array_for_association(:belongs_to)
+      @parent_models ||= model_info_array_for_association(:belongs_to)
     end
 
-    def model_info_array_for_association(association_type)
-      model.reflections.select { |key, value| value.macro == association_type }.collect do |kvpair|
-        kvpair[0].to_s.singularize
-      end.sort.collect do |model_name|
-        ModelInfo.new model_name
+    def has_many_through_models
+      @has_many_through_models ||= model_info_array_for_association(:has_many, ActiveRecord::Reflection::ThroughReflection)
+    end
+
+    def find_through_model(source_model_name)
+      reflections_for_association(:has_many, ActiveRecord::Reflection::ThroughReflection).each do |kvpair|
+        reflection_model_name = kvpair[0].to_s.singularize
+        if reflection_model_name == source_model_name.underscore
+          reflection = kvpair[1]
+          return ModelInfo.new(reflection.options[:through].to_s.singularize)
+        end
+      end
+      nil
+    end
+
+    def reflections_for_association(association_type, type)
+      model.reflections.select { |key, value| value.macro == association_type && value.is_a?(type) }
+    end
+
+    def model_info_from_reflection(reflection_model_name, reflection)
+      model_info = ModelInfo.new(reflection_model_name)
+      if reflection.is_a? ActiveRecord::Reflection::ThroughReflection
+        model_info.through_model = ModelInfo.new reflection.options[:through].to_s.singularize
+      end
+      model_info
+    end
+
+    def model_info_array_for_association(association_type, type = ActiveRecord::Reflection::AssociationReflection)
+      reflections_for_association(association_type, type).collect do |kvpair|
+        reflection_model_name = kvpair[0].to_s.singularize
+        reflection = kvpair[1]
+        model_info_from_reflection(reflection_model_name, reflection)
+      end.sort do |a, b|
+        a.name <=> b.name
       end
     end
 
@@ -77,18 +106,27 @@ module ViewMapper
     end
 
     def belongs_to?(parent_model_name)
-      has_association_for? :belongs_to, parent_model_name
+      !association_for(:belongs_to, parent_model_name).nil?
     end
 
     def has_many?(child_model_name)
-      has_association_for? :has_many, child_model_name
+      !association_for(:has_many, child_model_name).nil?
     end
 
     def has_and_belongs_to_many?(model_name)
-      has_association_for? :has_and_belongs_to_many, model_name
+      !association_for(:has_and_belongs_to_many, model_name).nil?
+    end
+
+    def has_many_through?(model_name)
+      reflection = association_for(:has_many, model_name.pluralize)
+      reflection && reflection.is_a?(ActiveRecord::Reflection::ThroughReflection)
     end
 
     def has_foreign_key_for?(parent_model_name)
+      !foreign_key_for(parent_model_name).nil?
+    end
+
+    def foreign_key_for(parent_model_name)
       model.columns.detect { |col| is_foreign_key_for?(col, parent_model_name) }
     end
 
@@ -140,10 +178,10 @@ module ViewMapper
       end
     end
 
-    def has_association_for?(association, model_name)
-      !model.reflections.values.detect do |reflection|
+    def association_for(association, model_name)
+      model.reflections.values.detect do |reflection|
         reflection.name == model_name.underscore.to_sym && reflection.macro == association
-      end.nil?
+      end
     end
 
     def is_paperclip_column?(col)

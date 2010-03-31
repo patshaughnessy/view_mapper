@@ -1,0 +1,11 @@
+<h1>Editing programmer</h1>
+
+<% form_for(@programmer) do |f| %>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @programmer %> |
+<%= link_to 'Back', programmers_path %>
