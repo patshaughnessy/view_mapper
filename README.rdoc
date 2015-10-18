@@ -1,6 +1,6 @@
 =View Mapper
 
-View_mapper will generate scaffolding for new or existing models, customized for the plugins or Rails features you use in your application.
+View Mapper will generate scaffolding for new or existing models, customized for the plugins or Ruby on Rails features you use in your application.
 
 When you run the "view_for" generator, View Mapper will generate the view scaffolding code for your model, enhanced to use the specified plugin or feature with your model's attributes. For example:
 
@@ -12,7 +12,7 @@ When you run the "view_for" generator, View Mapper will generate the view scaffo
 
 ...will generate a "paperclip view" for your existing song model. This is scaffolding that will support viewing and editing your song model and its Paperclip attachments. It's a good way to learn how to use Paperclip if you aren't familiar with it yet.
 
-Currently View Mapper supports views for the auto_complete and paperclip plugins, and views that contain complex forms for editing multiple associated models. If you don't specify any view then View Mapper by default will generate standard Rails scaffolding.
+Currently View Mapper supports views for the auto_complete and paperclip plugins, and views that contain complex forms for editing multiple associated models. If you don't specify any view then View Mapper by default will generate standard Ruby on Rails scaffolding.
 
 If you also want to create a new model at the same time, then use a second View Mapper generator called "scaffold_for_view" and provide the model's attributes in the usual way:
 
@@ -35,7 +35,7 @@ This is the same as view_for, but will also generate a new model at the same tim
 
 == Views
 
-{auto_complete}[http://patshaughnessy.net/2009/10/1/auto_complete-scaffolding]: Generates scaffolding that uses the standard Rails auto_complete plugin for type ahead behavior.
+{auto_complete}[http://patshaughnessy.net/2009/10/1/auto_complete-scaffolding]: Generates scaffolding that uses the standard Ruby on Rails auto_complete plugin for type ahead behavior.
 
 {paperclip}[http://patshaughnessy.net/2009/10/16/paperclip-scaffolding]: Generates scaffolding that uses Paperclip to upload and download files.
 
